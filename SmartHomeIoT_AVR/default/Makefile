@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = SmartHomeIoT_AVR.o lcd.o 
+OBJECTS = SmartHomeIoT_AVR.o lcd.o dht.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -50,6 +50,9 @@ SmartHomeIoT_AVR.o: ../SmartHomeIoT_AVR.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 lcd.o: ../lcd.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+dht.o: ../dht.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

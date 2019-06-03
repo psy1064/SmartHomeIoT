@@ -3,16 +3,13 @@
 #include <stdio.h>
 #include <avr/interrupt.h> 
 #include <util/delay.h> 
+#include <string.h>
 #include "lcd.h"
 
 
 // 온습도 센서
-#define DHT11_PIN PD4
-void Request();
-void Response();
-uint8_t Receive_data();
 void getDHT();
-uint8_t c=0,I_RH,D_RH,I_Temp,D_Temp,CheckSum;
+uint8_t I_RH,D_RH,I_Temp,D_Temp,CheckSum;
 char i_rh[5], d_rh[5], i_temp[5], d_temp[5];
 
 // LCD
@@ -24,6 +21,13 @@ void SerialPutChar(char ch);
 void SerialPutString(char str[]);
 void sendDHT();
 
+static volatile  char  recv_cnt = 0, rdata = 0, new_recv_flag = 0, rdata_old = 0 ;  
+static volatile  char recv_data[3] = {0,0,0};
+static volatile unsigned char   Command_Error_Flag = 0 ; 
+
+static volatile char Cmd_Message_1[] = {"on" } ;     //  Blutooth Command
+static volatile char Cmd_Message_2[] = {"off"} ;  
+
 // 범용 
 void HexToDec( unsigned short num, unsigned short radix); 
 char NumToAsc( unsigned char Num ); 
@@ -34,20 +38,63 @@ void init();			// 초기 설정
 
 static volatile unsigned char cnumber[5] = {0, 0, 0, 0, 0}; 
 
-
-
 int main() 
 {   
+	char eq_count1=0, eq_count2=0, cmd_data = 0xFF  ;  	  
+    unsigned char i=0 ;
+	DDRA |= 0x10;
+	PORTA &= ~0x10;
+	
 	pin_init();		  // Pin 초기화
 	init();			  // Interrupt , Timer, Register 초기화 
-	init_serial() ;   // Serial Port (USART1) 초기화
-		 
+	init_serial() ;   // Serial Port (USART0) 초기화
+
+	UCSR0B |=  0x80  ;      // UART1 송신(RX) 완료 인터럽트 허용
+
 	while (1) 
 	{ 
-		
+		if( new_recv_flag == 1)
+		{
+			for( i=0; i < recv_cnt ; i++) 
+			{
+				if( recv_data[i] == Cmd_Message_1[i] ) eq_count1++ ;
+			    if( recv_data[i] == Cmd_Message_2[i] ) eq_count2++ ; 
+            }
+	
+			if(eq_count1 == 2) cmd_data = 1;
+			else if(eq_count2 == 3) cmd_data = 2;
+			else cmd_data = 0xFE;
+			
+			eq_count1 = 0, eq_count2 = 0 , new_recv_flag = 0;
+		}
+		if(cmd_data == 1)
+		{
+			// Servo_On();
+			PORTA |= 0x10;
+			LcdCommand(ALLCLR);
+			LcdMove(0,0);
+			LcdPuts("Turn On!!");
+		}
+		else if(cmd_data == 2)
+		{
+			// Servo_On();
+			PORTA &= ~0x10;
+			LcdCommand(ALLCLR);
+			LcdMove(0,0);
+			LcdPuts("Turn Off!!");
+		}
+		else if(cmd_data == 0xFE)
+		{
+			LcdCommand(ALLCLR);
+			LcdMove(0,0);
+			LcdPuts("Command Error!!");
+			LcdMove(1,0);
+			LcdPuts(recv_data);
+		}
+
+		cmd_data = 0xFF;
 	}
 } 
-
 
 ISR(TIMER0_OVF_vect)   // Timer0 overflow interrupt( 10 msec)  service routine
 {
@@ -68,8 +115,27 @@ ISR(TIMER0_OVF_vect)   // Timer0 overflow interrupt( 10 msec)  service routine
 	   
    }
 }
+ISR(  USART0_RX_vect )
+{
+    static unsigned char r_cnt = 0 ;
 
+    rdata = UDR0; 
 
+    if( rdata != '.' )                      // 수신된 데이터가 마지막 문자를 나타내는 데이터(마침표)가 아니면
+    {
+        recv_data[r_cnt] = rdata;        //  수신된 문자 저장 
+	    r_cnt++;                         //  수신 문자 갯수 증가 
+
+		new_recv_flag = 0;
+    }
+    else if(  rdata == '.' )                // 수신된데이터가 마지막 문자를 나타내는 데이터(마침표) 이면
+    {
+        recv_cnt = r_cnt ;                  // 수신된 데이터 바이트수 저장
+        r_cnt = 0;  
+        
+		new_recv_flag = 1;
+    }
+}
 void pin_init()
 {
 	DDRB |= 0x10;     // LED (PB4 : 출력설정 )
@@ -94,20 +160,20 @@ void init()
                              //  156 = 50usec/ 0.5use
 
 	TIMSK = 0x01;  // Timer0 overflow interrupt enable 
+	
 	sei();         // Global Interrupt Enable 
-
-
 	TCCR0 |= 0x07; // Clock Prescaler N=1024 (Timer 0 Start)
 }
 void init_serial(void)
 {
     UCSR0A = 0x00;                    //초기화
-    UCSR0B = 0x18  ;                  //송수신허용,  송수신 인터럽트 금지
+    UCSR0B = 0x18;                    //송수신허용,  송수신 인터럽트 금지
     UCSR0C = 0x06;                    //데이터 전송비트 수 8비트로 설정.
     
     UBRR0H = 0x00;
     UBRR0L = 103;                     //Baud Rate 9600 
 }
+
 void sendDHT()
 {
 	SerialPutString(i_temp);
@@ -118,9 +184,9 @@ void sendDHT()
 	SerialPutChar('.');
 	SerialPutString(d_rh);
 }
+
 void getDHT()
 {
-
 	Request();		/* send start pulse */
 	Response();		/* receive response */
 	I_RH=Receive_data();	/* store first eight bit in I_RH */
@@ -137,6 +203,12 @@ void getDHT()
 		
 	else
 	{	
+		LcdCommand(ALLCLR);
+		LcdMove(0,0);  
+		LcdPuts("HUM=");
+		LcdMove(1,0); 
+		LcdPuts("TMP= ");
+
 		itoa(I_RH,i_rh,10);
 		LcdMove(0,4);
 		LcdPuts(i_rh);
@@ -165,43 +237,6 @@ void getDHT()
 	_delay_ms(10);
 }
 
-void Request()				/* Microcontroller send start pulse/request */
-{
-	DDRD |= (1<<DHT11_PIN);
-	PORTD &= ~(1<<DHT11_PIN);	/* set to low pin */
-	_delay_ms(20);			/* wait for 20ms */
-	PORTD |= (1<<DHT11_PIN);	/* set to high pin */
-	_delay_us(40);
-}
-
-void Response()				/* receive response from DHT11 */
-{
-	DDRD &= ~(1<<DHT11_PIN);
-	while(PIND & (1<<DHT11_PIN));
-	while((PIND & (1<<DHT11_PIN))==0);
-	while(PIND & (1<<DHT11_PIN));
-}
-
-uint8_t Receive_data()			/* receive data */
-{	
-	for (int q=0; q<8; q++)
-	{
-		while((PIND & (1<<DHT11_PIN)) == 0);  /* check received bit 0 or 1 */
-		_delay_us(30);
-		if(PIND & (1<<DHT11_PIN)) /* if high pulse is greater than 30ms */
-		{
-			c = (c<<1)|(0x01);	/* then its logic HIGH */
-		}
-		else			/* otherwise its logic LOW */
-		{
-			c = (c<<1);
-		}
-
-		while(PIND & (1<<DHT11_PIN));
-		
-	}
-	return c;
-}
 
 void SerialPutChar(char ch)
 {
@@ -269,7 +304,6 @@ void HexToDec( unsigned short num, unsigned short radix)
 		num /= radix; 
 
 	} while(num);
-
 } 
 
 char NumToAsc( unsigned char Num )
@@ -279,8 +313,6 @@ char NumToAsc( unsigned char Num )
 
 	return Num ;
 }
-
-
 
 void msec_delay(unsigned int n)
 {	
