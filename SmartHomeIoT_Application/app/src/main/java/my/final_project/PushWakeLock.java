@@ -1,4 +1,4 @@
-package my.smarthomeIoT_Application;
+package my.final_project;
 
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;

@@ -1,4 +1,4 @@
-package my.smarthomeIoT_Application;
+package my.final_project;
 
 import org.junit.Test;
 

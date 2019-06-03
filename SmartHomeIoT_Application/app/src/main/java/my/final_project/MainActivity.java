@@ -1,4 +1,4 @@
-package my.smarthomeIoT_Application;
+package my.final_project;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -87,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
                             tempText.setTextSize(30);
                             humText.setText(dht[1] + " %");
                             humText.setTextSize(30);
-                            // builder.setContentText("온도 = " + dht[0] + "C 습도 = " + dht[1] + "%" );
-                            // notificationManager.notify(0,builder.build());
                             break;
                         }
                     }

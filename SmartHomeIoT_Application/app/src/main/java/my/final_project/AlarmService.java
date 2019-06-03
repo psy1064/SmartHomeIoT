@@ -1,4 +1,4 @@
-package my.smarthomeIoT_Application;
+package my.final_project;
 
 import android.app.Service;
 import android.content.Intent;
