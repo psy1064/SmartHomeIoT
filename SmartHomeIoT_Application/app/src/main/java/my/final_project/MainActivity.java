@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Context context;
 
     ImageView backgroundImage;
-    TextView alarmText, lightBulbText, tempText, humText;
+    TextView alarmText, lightBulbText, tempText, humText, dustText;
     Button alarmButton, turnOnButton, turnOffButton;
     CheckBox checkBox;
     FloatingActionButton fab;
@@ -194,7 +194,13 @@ public class MainActivity extends AppCompatActivity {
             alarmButton.setText("알람 시간 설정");
         }
         // 어플을 껐다 켰을 때 끄기 전 체크박스가 체크된 상태였는지 확인
-
+        dustText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), WeatherActivity.class);
+                startActivity(intent);
+            }
+        });
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -418,6 +424,7 @@ public class MainActivity extends AppCompatActivity {
         backgroundImage = (ImageView)findViewById(R.id.background);
         alarmText = (TextView)findViewById(R.id.alarmText);
         lightBulbText = (TextView)findViewById(R.id.lightBulbText);
+        dustText = (TextView)findViewById(R.id.dustText);
     }
     // findViewById 초기화
     public void changedBackground() {
