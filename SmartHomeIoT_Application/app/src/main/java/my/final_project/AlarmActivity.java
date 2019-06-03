@@ -62,7 +62,7 @@ public class AlarmActivity extends AppCompatActivity {
             // Reset out string buffer to zero and clear the edit text field
         }
         mSendingState = STATE_NO_SENDING ;
-        notify();
+//      notify();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class AlarmActivity extends AppCompatActivity {
 
         if(MainActivity.bluetoothServiceMain.getState()==BluetoothService.STATE_CONNECTED) {
             Log.d(TAG,"send success");
-            sendMessage("turn on", MODE_REQUEST); // Atmega128에 전등 키라는 명령 전송
+            sendMessage("on.", MODE_REQUEST); // Atmega128에 전등 키라는 명령 전송
             Toast.makeText(getApplicationContext(),"Turn On", Toast.LENGTH_LONG).show();
         }
         else {

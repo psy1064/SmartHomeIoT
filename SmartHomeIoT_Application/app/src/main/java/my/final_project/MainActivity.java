@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int mSendingState ;
     public static BluetoothService bluetoothServiceMain = null;
+    StringBuffer mOutStringBuffer = new StringBuffer("");
     // 블루투스 사용
 
     private final Handler handler = new Handler() {
@@ -110,22 +111,21 @@ public class MainActivity extends AppCompatActivity {
 
         mSendingState = STATE_SENDING ;
 
-        // Check that we're actually connected before trying anything
         if ( bluetoothServiceMain.getState() != BluetoothService.STATE_CONNECTED ) {
             mSendingState = STATE_NO_SENDING ;
             return ;
         }
 
-        // Check that there's actually something to send
         if ( message.length() > 0 ) {
-            // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = message.getBytes() ;
             bluetoothServiceMain.write(send, mode) ;
 
-            // Reset out string buffer to zero and clear the edit text field
+            mOutStringBuffer.setLength(0) ;
+            Log.d(TAG,"send");
         }
+
         mSendingState = STATE_NO_SENDING ;
-        notify();
+        notify() ;
     }
     // 블루투스 통신을 이용해 메세지를 보내는 함수
     @Override
@@ -269,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if(bluetoothServiceMain.getState()==BluetoothService.STATE_CONNECTED) {
                             Log.d(TAG,"send success");
-                            sendMessage("turn on", MODE_REQUEST); // Atmega128에 전등 키라는 명령 전송
-                            Toast.makeText(getApplicationContext(),"Turn On", Toast.LENGTH_LONG).show();
+                            sendMessage("on.", MODE_REQUEST); // Atmega128에 전등 키라는 명령 전송
+                            Toast.makeText(getApplicationContext(),"turn on.", Toast.LENGTH_LONG).show();
                         }
                         else {
                             Log.e(TAG, "블루투스 연결 오류");
@@ -298,9 +298,9 @@ public class MainActivity extends AppCompatActivity {
                 alert.setPositiveButton("yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(),"Turn Off", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"turn off.", Toast.LENGTH_LONG).show();
                         Log.d(TAG,"send success");
-                        sendMessage("turn off", MODE_REQUEST); // Atmega128에 전등 끄라는 명령 전송
+                        sendMessage("off.", MODE_REQUEST); // Atmega128에 전등 끄라는 명령 전송
                     }
                 });
                 alert.setNegativeButton("no", new DialogInterface.OnClickListener() {

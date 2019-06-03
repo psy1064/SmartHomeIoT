@@ -1,7 +1,6 @@
 package my.final_project;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,8 +24,6 @@ public class initialActivity extends AppCompatActivity {
     public static final int MESSAGE_STATE_CHANGE = 1;
 
     public static BluetoothService btService = null;
-
-    ProgressDialog progressDialog;
 
     private final Handler handler = new Handler() {
         public void handleMessage(Message message) {
