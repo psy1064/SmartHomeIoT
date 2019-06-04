@@ -18,7 +18,7 @@ import java.util.Calendar;
 
 public class AlarmActivity extends AppCompatActivity {
     Calendar calendar = Calendar.getInstance();
-    TextView hourText, minuteText, testText;
+    TextView hourText, minuteText;
     Button stopButton;
     MediaPlayer mediaPlayer;
     CheckBox checkBox;
@@ -91,10 +91,8 @@ public class AlarmActivity extends AppCompatActivity {
         alarmButton = (Button)findViewById(R.id.setAlarmTimeButton);
         checkBox = (CheckBox)findViewById(R.id.checkBox);
         alarmImage = (ImageView)findViewById(R.id.alarmImage);
-        testText = (TextView)findViewById(R.id.textView);
 
         Log.d(TAG, "second = " + calendar.get(Calendar.SECOND));
-        testText.setText("Second = " + calendar.get(Calendar.SECOND));
         if(calendar.get(Calendar.HOUR_OF_DAY) > 0 && calendar.get(Calendar.HOUR_OF_DAY) < 12) {
             hourText.setText("오전 " + calendar.get(Calendar.HOUR_OF_DAY)  +  "시 ");
             minuteText.setText(calendar.get(Calendar.MINUTE) + "분");

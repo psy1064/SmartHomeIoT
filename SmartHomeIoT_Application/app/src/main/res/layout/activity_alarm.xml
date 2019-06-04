@@ -16,6 +16,7 @@
             android:id="@+id/hourText"
             android:layout_width="203dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="TextView"
@@ -25,6 +26,7 @@
             android:id="@+id/minuteText"
             android:layout_width="203dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="TextView"
@@ -34,21 +36,17 @@
     <ImageView
         android:id="@+id/alarmImage"
         android:layout_width="match_parent"
-        android:layout_height="461dp"
+        android:layout_height="430dp"
+        android:layout_marginTop="30dp"
         app:srcCompat="@drawable/alarm" />
 
     <Button
         android:id="@+id/stopButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:layout_gravity="center"
         android:background="@drawable/oval_shape"
         android:text="알람 종료" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
 </LinearLayout>

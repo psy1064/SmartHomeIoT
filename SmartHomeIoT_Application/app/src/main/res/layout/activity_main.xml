@@ -25,9 +25,13 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="107dp"
-        android:layout_marginLeft="107dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="106dp"
+        android:layout_marginLeft="106dp"
         android:layout_marginTop="52dp"
+        android:layout_marginEnd="106dp"
+        android:layout_marginRight="106dp"
         android:background="@drawable/oval_shape"
         android:gravity="center"
         android:text="매우나쁨\n(151㎍/m³)"
@@ -41,9 +45,13 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="185dp"
+        android:layout_marginEnd="181dp"
+        android:layout_marginRight="181dp"
         android:background="@drawable/oval_shape"
         android:gravity="center"
         android:text="26.0 C"
@@ -54,10 +62,15 @@
         android:id="@+id/humText"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:layout_marginStart="181dp"
+        android:layout_marginLeft="181dp"
         android:layout_marginTop="185dp"
         android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
         android:background="@drawable/oval_shape"
         android:gravity="center"
         android:text="30.5 %"
@@ -70,9 +83,13 @@
         android:layout_alignTop="@+id/dustText"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="178dp"
-        android:layout_marginLeft="178dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="175dp"
+        android:layout_marginLeft="175dp"
         android:layout_marginTop="6dp"
+        android:layout_marginEnd="175dp"
+        android:layout_marginRight="175dp"
         app:srcCompat="@drawable/dust" />
 
     <ImageView
@@ -81,7 +98,8 @@
         android:layout_height="60dp"
         android:layout_alignBottom="@+id/humText"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="103dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginEnd="100dp"
         android:layout_marginBottom="5dp"
         app:srcCompat="@drawable/hum" />
 
@@ -92,9 +110,9 @@
         android:layout_alignBottom="@+id/tempText"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="93dp"
-        android:layout_marginLeft="93dp"
-        android:layout_marginBottom="7dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginBottom="5dp"
         app:srcCompat="@drawable/temperature" />
 
     <ImageView
@@ -123,7 +141,7 @@
 
     <Button
         android:id="@+id/turnOnButton"
-        android:layout_width="66dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/background"
         android:layout_marginStart="28dp"
@@ -131,11 +149,12 @@
         android:layout_marginTop="482dp"
         android:layout_toEndOf="@+id/lightBulbText"
         android:layout_toRightOf="@+id/lightBulbText"
-        android:text="ON" />
+        android:text="ON"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     <Button
         android:id="@+id/turnOffButton"
-        android:layout_width="58dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/background"
         android:layout_marginStart="25dp"
@@ -143,7 +162,8 @@
         android:layout_marginTop="482dp"
         android:layout_toEndOf="@+id/turnOnButton"
         android:layout_toRightOf="@+id/turnOnButton"
-        android:text="OFF" />
+        android:text="OFF"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     <ImageView
         android:id="@+id/alarmLogo"
