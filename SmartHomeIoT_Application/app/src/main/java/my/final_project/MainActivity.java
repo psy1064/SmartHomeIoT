@@ -543,7 +543,6 @@ public class MainActivity extends AppCompatActivity {
     public void showAlarmNotify() {
         PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this,0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder nbuilder = new NotificationCompat.Builder(this,"default");
-        Uri sounduri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.zero);
 
         nbuilder.setSmallIcon(R.drawable.alarm);
         nbuilder.setContentTitle("알람");
@@ -569,35 +568,4 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG,"show Alarm notify");
     }
     // Alarm 설정 시 Notification 활성화
-
-    void showNotify() {
-        String CHANNEL_ID = "final_project";
-        Uri soundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.bell);
-
-        builder  = new NotificationCompat.Builder(this,CHANNEL_ID);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder.setSmallIcon(R.drawable.applogo);
-        builder.setContentTitle("Smart Home Application");
-        builder.setContentText("온도 = 00 C 습도 = 00%" );
-        builder.setContentIntent(pendingIntent);
-        builder.setSound(soundUri);
-
-        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if(soundUri != null) {
-                AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .setUsage(AudioAttributes.USAGE_ALARM)
-                        .build();
-
-                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "final_project", NotificationManager.IMPORTANCE_DEFAULT);
-                channel.setSound(soundUri, audioAttributes);
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
-
-        notificationManager.notify(0,builder.build());
-        Log.d(TAG,"notify");
-    }
 }
