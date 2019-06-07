@@ -10,8 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-public class initialActivity extends AppCompatActivity {
+public class InitialActivity extends AppCompatActivity {
     Button bluetoothOnButton;
     Button bluetoothListButton;
     Button test;
@@ -36,7 +35,7 @@ public class initialActivity extends AppCompatActivity {
                     switch (message.arg1) {
                         case BluetoothService.STATE_CONNECTED :
                             Toast.makeText(getApplicationContext(),"블루투스 연결에 성공했습니다.", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(initialActivity.this, MainActivity.class);
+                            Intent intent = new Intent(InitialActivity.this, MainActivity.class);
                             startActivity(intent);
                             break;
                         case BluetoothService.STATE_FAIL :
@@ -82,7 +81,7 @@ public class initialActivity extends AppCompatActivity {
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(initialActivity.this, MainActivity.class);
+                Intent intent = new Intent(InitialActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });

@@ -92,7 +92,7 @@ public class BluetoothService {
         mState = state;
 
         // 핸들러를 통해 상태를 메인에 넘겨준다.
-        mHandler.obtainMessage(initialActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+        mHandler.obtainMessage(InitialActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
     // 블루투스 상태를 가져옴
     public synchronized int getState() {

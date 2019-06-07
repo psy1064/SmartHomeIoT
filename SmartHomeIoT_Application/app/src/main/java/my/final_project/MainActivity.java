@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bluetoothServiceMain = initialActivity.btService;
+        bluetoothServiceMain = InitialActivity.btService;
         bluetoothServiceMain.set(this, handler);
         // initialActivity의 블루투스 서비스를 가져오고 Handler 만 세팅
 
@@ -483,7 +483,7 @@ public class MainActivity extends AppCompatActivity {
         int interval = 1000 * 60 * 60 * 24 ;
         // 설정된 알람 시간이 현재 시간보다 작을 경우 다음날 알람으로 적용해줘야 하는데 필요한 변수
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmIntent = new Intent(getApplicationContext(), Alarm_Receiver.class);
+        alarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         alarmPendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         if(Build.VERSION.SDK_INT >= 23) {
             if (alarmHour > calendar.get(Calendar.HOUR_OF_DAY)) {
