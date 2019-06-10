@@ -47,7 +47,7 @@ int main()
 	
 	pin_init();		  // Pin 초기화
 	init();			  // Interrupt , Timer, Register 초기화 
-	init_serial() ;   // Serial Port (USART0) 초기화
+	init_serial() ;   // Serial Port (USART0, 1) 초기화
 
 	while (1) 
 	{ 
@@ -145,6 +145,8 @@ void init()
 	LcdPuts("HM=");
 	LcdMove(0,8); 
 	LcdPuts("TP= ");
+	LcdMove(1,0);
+	LcdPuts("Dust(PM10) =");
 
 
 /**** Timer0 Overflow Interrupt  ******/
@@ -178,6 +180,15 @@ void init_serial(void)
     UBRR0L = 103;                     //Baud Rate 9600 
 
 	UCSR0B |= 0x80;   // UART0 송신(RX) 완료 인터럽트 허용
+
+	UCSR1A = 0x00;                    //초기화
+    UCSR1B = 0x18;                    //송수신허용,  송수신 인터럽트 금지
+    UCSR1C = 0x06;                    //데이터 전송비트 수 8비트로 설정.
+    
+    UBRR1H = 0x00;
+    UBRR1L = 103;                     //Baud Rate 9600 
+
+	UCSR1B |= 0x80;   // UART1 송신(RX) 완료 인터럽트 허용
 }
 
 void sendDust()
@@ -214,12 +225,6 @@ void getDHT()
 		
 	else
 	{	
-		LcdCommand(ALLCLR);
-		LcdMove(0,0);  
-		LcdPuts("HM=");
-		LcdMove(0,8); 
-		LcdPuts("TP= ");
-
 		itoa(I_RH,i_rh,10);
 		LcdMove(0,3);
 		LcdPuts(i_rh);
