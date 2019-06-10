@@ -24,7 +24,7 @@ public class AlarmActivity extends AppCompatActivity {
     int alarmMode = 0;
     boolean flag = true;
     public static final int MODE_REQUEST = 1 ;
-    public static final int MESSAGE_WRITE = 2;
+
     private static final int STATE_SENDING = 1;
     private static final int STATE_NO_SENDING = 2;
 
@@ -59,7 +59,6 @@ public class AlarmActivity extends AppCompatActivity {
             // Reset out string buffer to zero and clear the edit text field
         }
         mSendingState = STATE_NO_SENDING ;
-//      notify();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,15 +132,19 @@ public class AlarmActivity extends AppCompatActivity {
             @Override
             public void run() {
                 while (flag == true) {
-                    if (calendar.get(Calendar.HOUR_OF_DAY) > 0 && calendar.get(Calendar.HOUR_OF_DAY) < 12) {
-                        timeText.setText("오전 " + calendar.get(Calendar.HOUR_OF_DAY) + "시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
-                    } else if (calendar.get(Calendar.HOUR_OF_DAY) == 12) {
-                        timeText.setText("오후 " + calendar.get(Calendar.HOUR_OF_DAY) + "시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
-                    } else if (calendar.get(Calendar.HOUR_OF_DAY) > 12 && calendar.get(Calendar.HOUR_OF_DAY) < 24) {
-                        timeText.setText("오후 " + (calendar.get(Calendar.HOUR_OF_DAY) - 12) + "시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
-                    } else if (calendar.get(Calendar.HOUR_OF_DAY) == 0) {
-                        timeText.setText("오전 0시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
-                    }
+                    try {
+                        calendar = Calendar.getInstance();
+                        if (calendar.get(Calendar.HOUR_OF_DAY) > 0 && calendar.get(Calendar.HOUR_OF_DAY) < 12) {
+                            timeText.setText("오전 " + calendar.get(Calendar.HOUR_OF_DAY) + "시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
+                        } else if (calendar.get(Calendar.HOUR_OF_DAY) == 12) {
+                            timeText.setText("오후 " + calendar.get(Calendar.HOUR_OF_DAY) + "시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
+                        } else if (calendar.get(Calendar.HOUR_OF_DAY) > 12 && calendar.get(Calendar.HOUR_OF_DAY) < 24) {
+                            timeText.setText("오후 " + (calendar.get(Calendar.HOUR_OF_DAY) - 12) + "시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
+                        } else if (calendar.get(Calendar.HOUR_OF_DAY) == 0) {
+                            timeText.setText("오전 0시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
+                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {}
                 }
             }
         });
