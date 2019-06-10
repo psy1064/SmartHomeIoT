@@ -20,14 +20,14 @@ char i_rh[5], d_rh[5], i_temp[5], d_temp[5];
 static char dust_count = 0;
 uint8_t dust[32] = {0};
 uint16_t pm10 ;
+uint16_t pm10_old = 0;
 char pm[3] = {0};
 
 // Blue tooth communication
 void init_serial(void) ;  //  Serial 토신포트 초기화
 void SerialPutChar(char ch);
 void SerialPutString(char str[]);
-void sendDHT();
-void sendDust();
+void sendData();
 
 static volatile  char  recv_cnt = 0, rdata = 0, new_recv_flag = 0, rdata_old = 0 ;  
 static volatile  char recv_data[3] = {0,0,0};
@@ -113,8 +113,8 @@ ISR(TIMER0_OVF_vect)   // Timer0 overflow interrupt( 10 msec)  service routine
     if( time_index == 500 )    // 샘플링주기 10msec
     {       	
 	   	getDHT();
-	   	sendDHT();
-	   	sendDust();
+	   	sendData();
+		
 		time_index = 0; 
    }
 }
@@ -130,7 +130,17 @@ ISR( USART0_RX_vect)
 		{
 			pm10 = (dust[14] << 8) + (dust[15]);
 			
+			if((pm10 - pm10_old) > 10)
+			{
+				pm10 = pm10_old;
+			}
+			else
+			{
+				pm10_old = pm10;
+			}
+
 			itoa(pm10,pm,10);
+
 			LcdMove(1,5);
 			LcdPuts(pm);
 		}
@@ -220,12 +230,8 @@ void init_serial(void)
 	UCSR1B |= 0x80;   // UART1 수신(RX) 완료 인터럽트 허용 블루투스 통신
 }
 
-void sendDust()
-{
-	SerialPutString(pm10);
-}
 
-void sendDHT()
+void sendData()
 {
 	SerialPutString(i_temp);
 	SerialPutChar('.');
@@ -234,6 +240,9 @@ void sendDHT()
 	SerialPutString(i_rh);
 	SerialPutChar('.');
 	SerialPutString(d_rh);
+	SerialPutChar(',');
+	SerialPutString(pm);
+	SerialPutChar('/');
 }
 
 void getDHT()
@@ -261,6 +270,8 @@ void getDHT()
 		LcdPuts("TP= ");
 		LcdMove(1,0);
 		LcdPuts("Dust=");
+		LcdMove(1,5);
+		LcdPuts(pm);
 
 		itoa(I_RH,i_rh,10);
 		LcdMove(0,3);
