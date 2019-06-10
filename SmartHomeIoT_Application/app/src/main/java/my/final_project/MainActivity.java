@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     public static BluetoothService bluetoothServiceMain = null;
     StringBuffer mOutStringBuffer = new StringBuffer("");
     String[] sensor;
+    int dust;
     // 블루투스 사용
 
     private final Handler handler = new Handler() {
@@ -87,8 +88,18 @@ public class MainActivity extends AppCompatActivity {
                             tempText.setTextSize(30);
                             humText.setText(sensor[1] + " %");
                             humText.setTextSize(30);
-                            dustText.setText(sensor[2]);
-                            dustText.setTextSize(30);
+                            sensor[2] = sensor[2].substring(0, sensor[2].length() -1);
+                            dust = Integer.parseInt(sensor[2]);
+                            if(dust >= 0 && dust <= 30) {
+                                dustText.setText("좋음\n"+sensor[2]+"㎍/m³");
+                                dustText.setTextColor(Color.BLUE);
+                            }
+                            else {
+                                dustText.setText("나쁨\n"+sensor[2]+"㎍/m³");
+                                dustText.setTextColor(Color.RED);
+                            }
+
+                            dustText.setTextSize(27);
                             break;
                         }
                     }
@@ -126,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mSendingState = STATE_NO_SENDING ;
-        notify() ;
+//        notify() ;
     }
     // 블루투스 통신을 이용해 메세지를 보내는 함수
     @Override
@@ -142,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(1);       // 알람 Notification 취소
-                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(0);       // 알람 Notification 취소
+                InitialActivity.btService = null;
                 if(alarmManager != null)                                                                    // 알람이 설정 되어 있었다면
                     alarm_Off();                                                                            // 알람 설정 해제
             }

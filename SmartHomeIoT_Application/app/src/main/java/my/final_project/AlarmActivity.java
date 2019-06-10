@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,14 +17,12 @@ import java.util.Calendar;
 
 public class AlarmActivity extends AppCompatActivity {
     Calendar calendar = Calendar.getInstance();
-    TextView hourText, minuteText;
+    TextView timeText;
     Button stopButton;
     MediaPlayer mediaPlayer;
-    CheckBox checkBox;
-    Button alarmButton;
     ImageView alarmImage;
     int alarmMode = 0;
-
+    boolean flag = true;
     public static final int MODE_REQUEST = 1 ;
     public static final int MESSAGE_WRITE = 2;
     private static final int STATE_SENDING = 1;
@@ -85,33 +82,14 @@ public class AlarmActivity extends AppCompatActivity {
         }
 
 
-        hourText = (TextView)findViewById(R.id.hourText);
-        minuteText = (TextView)findViewById(R.id.minuteText);
+        timeText = (TextView)findViewById(R.id.timeText);
         stopButton = (Button)findViewById(R.id.stopButton);
-        alarmButton = (Button)findViewById(R.id.setAlarmTimeButton);
-        checkBox = (CheckBox)findViewById(R.id.checkBox);
         alarmImage = (ImageView)findViewById(R.id.alarmImage);
 
-        Log.d(TAG, "second = " + calendar.get(Calendar.SECOND));
-        if(calendar.get(Calendar.HOUR_OF_DAY) > 0 && calendar.get(Calendar.HOUR_OF_DAY) < 12) {
-            hourText.setText("오전 " + calendar.get(Calendar.HOUR_OF_DAY)  +  "시 ");
-            minuteText.setText(calendar.get(Calendar.MINUTE) + "분");
-        }
-        else if(calendar.get(Calendar.HOUR_OF_DAY) == 12) {
-            hourText.setText("오후 " + calendar.get(Calendar.HOUR_OF_DAY)  +  "시 ");
-            minuteText.setText(calendar.get(Calendar.MINUTE) + "분");
-        }
-        else if(calendar.get(Calendar.HOUR_OF_DAY) > 12 && calendar.get(Calendar.HOUR_OF_DAY) <24) {
-            hourText.setText("오후 " + (calendar.get(Calendar.HOUR_OF_DAY)-12)  +  "시 ");
-            minuteText.setText(calendar.get(Calendar.MINUTE) + "분");
-        }
-        else if(calendar.get(Calendar.HOUR_OF_DAY) == 0) {
-            hourText.setText("오전 0시");
-            minuteText.setText(calendar.get(Calendar.MINUTE) + "분");
-        }
+
         alarmMode = MainActivity.alarmMode;
         Log.d("alarmMode","alarmMode" + alarmMode);
-
+        run();
         switch (alarmMode) {
             case 0: {
                 mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.ringtone);
@@ -145,8 +123,28 @@ public class AlarmActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mediaPlayer.stop();
+                flag = false;
                 finish();
             }
         });
+    }
+    public void run() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (flag == true) {
+                    if (calendar.get(Calendar.HOUR_OF_DAY) > 0 && calendar.get(Calendar.HOUR_OF_DAY) < 12) {
+                        timeText.setText("오전 " + calendar.get(Calendar.HOUR_OF_DAY) + "시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
+                    } else if (calendar.get(Calendar.HOUR_OF_DAY) == 12) {
+                        timeText.setText("오후 " + calendar.get(Calendar.HOUR_OF_DAY) + "시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
+                    } else if (calendar.get(Calendar.HOUR_OF_DAY) > 12 && calendar.get(Calendar.HOUR_OF_DAY) < 24) {
+                        timeText.setText("오후 " + (calendar.get(Calendar.HOUR_OF_DAY) - 12) + "시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
+                    } else if (calendar.get(Calendar.HOUR_OF_DAY) == 0) {
+                        timeText.setText("오전 0시 " + calendar.get(Calendar.MINUTE) + "분" + calendar.get(Calendar.SECOND) + "초");
+                    }
+                }
+            }
+        });
+        thread.start();
     }
 }
