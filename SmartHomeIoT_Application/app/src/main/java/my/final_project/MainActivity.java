@@ -11,8 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.AudioAttributes;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private int mSendingState ;
     public static BluetoothService bluetoothServiceMain = null;
     StringBuffer mOutStringBuffer = new StringBuffer("");
+    String[] sensor;
     // 블루투스 사용
 
     private final Handler handler = new Handler() {
@@ -81,13 +80,15 @@ public class MainActivity extends AppCompatActivity {
                     switch (message.arg1) {
                         case 1 : {
                             String tmp = message.obj.toString();
-                            String[] dht = tmp.split(",");
+                            sensor = tmp.split(",");
                             tempText = findViewById(R.id.tempText);
                             humText = findViewById(R.id.humText);
-                            tempText.setText(dht[0] + " C");
+                            tempText.setText(sensor[0] + " C");
                             tempText.setTextSize(30);
-                            humText.setText(dht[1] + " %");
+                            humText.setText(sensor[1] + " %");
                             humText.setTextSize(30);
+                            dustText.setText(sensor[2]);
+                            dustText.setTextSize(30);
                             break;
                         }
                     }
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bluetoothServiceMain = initialActivity.btService;
+        bluetoothServiceMain = InitialActivity.btService;
         bluetoothServiceMain.set(this, handler);
         // initialActivity의 블루투스 서비스를 가져오고 Handler 만 세팅
 
@@ -198,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), WeatherActivity.class);
+                intent.putExtra("dust", sensor[2]);
                 startActivity(intent);
             }
         });
@@ -483,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
         int interval = 1000 * 60 * 60 * 24 ;
         // 설정된 알람 시간이 현재 시간보다 작을 경우 다음날 알람으로 적용해줘야 하는데 필요한 변수
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmIntent = new Intent(getApplicationContext(), Alarm_Receiver.class);
+        alarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         alarmPendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         if(Build.VERSION.SDK_INT >= 23) {
             if (alarmHour > calendar.get(Calendar.HOUR_OF_DAY)) {

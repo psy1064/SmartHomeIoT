@@ -92,7 +92,7 @@ public class BluetoothService {
         mState = state;
 
         // 핸들러를 통해 상태를 메인에 넘겨준다.
-        mHandler.obtainMessage(initialActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+        mHandler.obtainMessage(InitialActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
     // 블루투스 상태를 가져옴
     public synchronized int getState() {
@@ -301,7 +301,7 @@ public class BluetoothService {
             byte[] buffer = new byte[1024];
             int bytes;
             int bytes_tmp = 0;
-            int temp_Length = 9;
+            int temp_Length = 11;
             String temp = "";
             // Keep listening to the InputStream while connected
             while (true) {
@@ -311,19 +311,14 @@ public class BluetoothService {
                     bytes = mmInStream.read(buffer);
                     Log.d(TAG, "byte = " + bytes);
                     String tmp = new String(buffer,0,bytes);
-
-                    bytes_tmp += bytes;
-                    if(bytes_tmp <= temp_Length) {
+                    if(tmp.charAt(bytes-1) != '/'){
                         temp += tmp;
                     }
-
-                    if(bytes_tmp == temp_Length) {
-                        Log.d(TAG,"receive success");
-                        bytes_tmp = 0;
-                        mHandler.obtainMessage(MainActivity.MESSAGE_WRITE,1,1,temp).sendToTarget();
+                    else {
+                        Log.d(TAG, "receive success");
+                        mHandler.obtainMessage(MainActivity.MESSAGE_WRITE, 1, 1, temp).sendToTarget();
                         temp = "";
                     }
-
 
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);

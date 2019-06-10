@@ -21,7 +21,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".initialActivity">
+        <activity android:name=".InitialActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +34,7 @@
             android:name=".DeviceListActivity"
             android:theme="@android:style/Theme.DeviceDefault.Dialog" />
 
-        <receiver android:name=".Alarm_Receiver" />
+        <receiver android:name=".AlarmReceiver" />
     </application>
 
 </manifest>
