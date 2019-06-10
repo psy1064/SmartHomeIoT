@@ -7,16 +7,16 @@
 #include "lcd.h"
 
 
-// ¿Â½Àµµ ¼¾¼­
+// ì˜¨ìŠµë„ ì„¼ì„œ
 void getDHT();
 uint8_t I_RH,D_RH,I_Temp,D_Temp,CheckSum;
 char i_rh[5], d_rh[5], i_temp[5], d_temp[5];
 
 // LCD
-void Display_Number_LCD( unsigned int num, unsigned char digit ) ;    // ºÎÈ£¾ø´Â Á¤¼öÇü º¯¼ö¸¦ 10Áø¼ö ÇüÅÂ·Î LCD ¿¡ µğ½ºÇÃ·¹ÀÌ 
+void Display_Number_LCD( unsigned int num, unsigned char digit ) ;    // ë¶€í˜¸ì—†ëŠ” ì •ìˆ˜í˜• ë³€ìˆ˜ë¥¼ 10ì§„ìˆ˜ í˜•íƒœë¡œ LCD ì— ë””ìŠ¤í”Œë ˆì´ 
 
 // Blue tooth communication
-void init_serial(void) ;  //  Serial Åä½ÅÆ÷Æ® ÃÊ±âÈ­
+void init_serial(void) ;  //  Serial í† ì‹ í¬íŠ¸ ì´ˆê¸°í™”
 void SerialPutChar(char ch);
 void SerialPutString(char str[]);
 void sendDHT();
@@ -28,13 +28,13 @@ static volatile unsigned char   Command_Error_Flag = 0 ;
 static volatile char Cmd_Message_1[] = {"on" } ;     //  Blutooth Command
 static volatile char Cmd_Message_2[] = {"off"} ;  
 
-// ¹ü¿ë 
+// ë²”ìš© 
 void HexToDec( unsigned short num, unsigned short radix); 
 char NumToAsc( unsigned char Num ); 
 void msec_delay(unsigned int n);
 void usec_delay(unsigned int n);
-void pin_init();		// ÇÉ ¼³Á¤ ÃÊ±âÈ­
-void init();			// ÃÊ±â ¼³Á¤
+void pin_init();		// í•€ ì„¤ì • ì´ˆê¸°í™”
+void init();			// ì´ˆê¸° ì„¤ì •
 
 static volatile unsigned char cnumber[5] = {0, 0, 0, 0, 0}; 
 
@@ -45,11 +45,11 @@ int main()
 	DDRA |= 0x10;
 	PORTA &= ~0x10;
 	
-	pin_init();		  // Pin ÃÊ±âÈ­
-	init();			  // Interrupt , Timer, Register ÃÊ±âÈ­ 
-	init_serial() ;   // Serial Port (USART0) ÃÊ±âÈ­
+	pin_init();		  // Pin ì´ˆê¸°í™”
+	init();			  // Interrupt , Timer, Register ì´ˆê¸°í™” 
+	init_serial() ;   // Serial Port (USART0) ì´ˆê¸°í™”
 
-	UCSR0B |=  0x80  ;      // UART1 ¼Û½Å(RX) ¿Ï·á ÀÎÅÍ·´Æ® Çã¿ë
+	UCSR0B |=  0x80  ;      // UART0 ì†¡ì‹ (RX) ì™„ë£Œ ì¸í„°ëŸ½íŠ¸ í—ˆìš©
 
 	while (1) 
 	{ 
@@ -77,7 +77,7 @@ int main()
 		}
 		else if(cmd_data == 2)
 		{
-			// Servo_On();
+			// Servo_Off();
 			PORTA &= ~0x10;
 			LcdCommand(ALLCLR);
 			LcdMove(0,0);
@@ -101,18 +101,17 @@ ISR(TIMER0_OVF_vect)   // Timer0 overflow interrupt( 10 msec)  service routine
 
 	static unsigned short  time_index = 0, send_time_index = 0;
 
-    TCNT0 = 256 - 156;       //  ³»ºÎÅ¬·°ÁÖ±â = 1024/ (16x10^6) = 64 usec,  
-                             //  ¿À¹öÇÃ·ÎÀÎÅÍ·´Æ® ÁÖ±â = 10msec
+    TCNT0 = 256 - 156;       //  ë‚´ë¶€í´ëŸ­ì£¼ê¸° = 1024/ (16x10^6) = 64 usec,  
+                             //  ì˜¤ë²„í”Œë¡œì¸í„°ëŸ½íŠ¸ ì£¼ê¸° = 10msec
                              //  156 = 10msec/ 64usec
 
     time_index++ ; 
 	
-    if( time_index == 500 )    // »ùÇÃ¸µÁÖ±â 10msec
+    if( time_index == 500 )    // ìƒ˜í”Œë§ì£¼ê¸° 10msec
     {
        time_index = 0; 
 	   getDHT();
 	   sendDHT();
-	   
    }
 }
 ISR(  USART0_RX_vect )
@@ -121,16 +120,16 @@ ISR(  USART0_RX_vect )
 
     rdata = UDR0; 
 
-    if( rdata != '.' )                      // ¼ö½ÅµÈ µ¥ÀÌÅÍ°¡ ¸¶Áö¸· ¹®ÀÚ¸¦ ³ªÅ¸³»´Â µ¥ÀÌÅÍ(¸¶Ä§Ç¥)°¡ ¾Æ´Ï¸é
+    if( rdata != '.' )                      // ìˆ˜ì‹ ëœ ë°ì´í„°ê°€ ë§ˆì§€ë§‰ ë¬¸ìë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë°ì´í„°(ë§ˆì¹¨í‘œ)ê°€ ì•„ë‹ˆë©´
     {
-        recv_data[r_cnt] = rdata;        //  ¼ö½ÅµÈ ¹®ÀÚ ÀúÀå 
-	    r_cnt++;                         //  ¼ö½Å ¹®ÀÚ °¹¼ö Áõ°¡ 
+        recv_data[r_cnt] = rdata;        //  ìˆ˜ì‹ ëœ ë¬¸ì ì €ì¥ 
+	    r_cnt++;                         //  ìˆ˜ì‹  ë¬¸ì ê°¯ìˆ˜ ì¦ê°€ 
 
 		new_recv_flag = 0;
     }
-    else if(  rdata == '.' )                // ¼ö½ÅµÈµ¥ÀÌÅÍ°¡ ¸¶Áö¸· ¹®ÀÚ¸¦ ³ªÅ¸³»´Â µ¥ÀÌÅÍ(¸¶Ä§Ç¥) ÀÌ¸é
+    else if(  rdata == '.' )                // ìˆ˜ì‹ ëœë°ì´í„°ê°€ ë§ˆì§€ë§‰ ë¬¸ìë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë°ì´í„°(ë§ˆì¹¨í‘œ) ì´ë©´
     {
-        recv_cnt = r_cnt ;                  // ¼ö½ÅµÈ µ¥ÀÌÅÍ ¹ÙÀÌÆ®¼ö ÀúÀå
+        recv_cnt = r_cnt ;                  // ìˆ˜ì‹ ëœ ë°ì´í„° ë°”ì´íŠ¸ìˆ˜ ì €ì¥
         r_cnt = 0;  
         
 		new_recv_flag = 1;
@@ -138,7 +137,7 @@ ISR(  USART0_RX_vect )
 }
 void pin_init()
 {
-	DDRB |= 0x10;     // LED (PB4 : Ãâ·Â¼³Á¤ )
+	DDRB |= 0x10;     // LED (PB4 : ì¶œë ¥ì„¤ì • )
 	PORTB &= ~0x10;   // PB4  : High ( LED OFF) 
 }
 void init()
@@ -155,8 +154,8 @@ void init()
 /**** Timer0 Overflow Interrupt  ******/
 
 	TCCR0 = 0x00; 
-    TCNT0 = 256 - 100;       //  ³»ºÎÅ¬·°ÁÖ±â = 8/ (16x10^6) = 0.5 usec,  
-                             //  ¿À¹öÇÃ·ÎÀÎÅÍ·´Æ® ÁÖ±â = 50usec
+    TCNT0 = 256 - 100;       //  ë‚´ë¶€í´ëŸ­ì£¼ê¸° = 8/ (16x10^6) = 0.5 usec,  
+                             //  ì˜¤ë²„í”Œë¡œì¸í„°ëŸ½íŠ¸ ì£¼ê¸° = 50usec
                              //  156 = 50usec/ 0.5use
 
 	TIMSK = 0x01;  // Timer0 overflow interrupt enable 
@@ -166,9 +165,9 @@ void init()
 }
 void init_serial(void)
 {
-    UCSR0A = 0x00;                    //ÃÊ±âÈ­
-    UCSR0B = 0x18;                    //¼Û¼ö½ÅÇã¿ë,  ¼Û¼ö½Å ÀÎÅÍ·´Æ® ±İÁö
-    UCSR0C = 0x06;                    //µ¥ÀÌÅÍ Àü¼ÛºñÆ® ¼ö 8ºñÆ®·Î ¼³Á¤.
+    UCSR0A = 0x00;                    //ì´ˆê¸°í™”
+    UCSR0B = 0x18;                    //ì†¡ìˆ˜ì‹ í—ˆìš©,  ì†¡ìˆ˜ì‹  ì¸í„°ëŸ½íŠ¸ ê¸ˆì§€
+    UCSR0C = 0x06;                    //ë°ì´í„° ì „ì†¡ë¹„íŠ¸ ìˆ˜ 8ë¹„íŠ¸ë¡œ ì„¤ì •.
     
     UBRR0H = 0x00;
     UBRR0L = 103;                     //Baud Rate 9600 
@@ -205,31 +204,34 @@ void getDHT()
 	{	
 		LcdCommand(ALLCLR);
 		LcdMove(0,0);  
-		LcdPuts("HUM=");
-		LcdMove(1,0); 
-		LcdPuts("TMP= ");
+		LcdPuts("HM=");
+		LcdMove(0,8); 
+		LcdPuts("TP= ");
 
 		itoa(I_RH,i_rh,10);
-		LcdMove(0,4);
+		LcdMove(0,3);
 		LcdPuts(i_rh);
-		LcdMove(0,6);
+		LcdMove(0,5);
 		LcdPuts(".");
 			
 		itoa(D_RH,d_rh,10);
-		LcdMove(0,7);
+		LcdMove(0,6);
 		LcdPuts(d_rh);
-		LcdMove(0,8);
+		LcdMove(0,7);
 		LcdPuts("%");
+
+		//////////// ìŠµë„ Display
+
 		itoa(I_Temp,i_temp,10);
-		LcdMove(1,4);
+		LcdMove(0,11);
 		LcdPuts(i_temp);
-		LcdMove(1,6);
+		LcdMove(0,13);
 		LcdPuts(".");
 			
 		itoa(D_Temp,d_temp,10);
-		LcdMove(1,7);
+		LcdMove(0,14);
 		LcdPuts(d_temp);
-		LcdMove(1,8);
+		LcdMove(0,15);
 		LcdPuts("C");
 		
 	}
@@ -240,54 +242,54 @@ void getDHT()
 
 void SerialPutChar(char ch)
 {
-	while(!(UCSR0A & (1<<UDRE)));			// ¹öÆÛ°¡ ºô ¶§¸¦ ±â´Ù¸²
-  	UDR0 = ch;								// ¹öÆÛ¿¡ ¹®ÀÚ¸¦ ¾´´Ù
-} // ÇÑ ¹®ÀÚ¸¦ ¼Û½ÅÇÑ´Ù.
+	while(!(UCSR0A & (1<<UDRE)));			// ë²„í¼ê°€ ë¹Œ ë•Œë¥¼ ê¸°ë‹¤ë¦¼
+  	UDR0 = ch;								// ë²„í¼ì— ë¬¸ìë¥¼ ì“´ë‹¤
+} // í•œ ë¬¸ìë¥¼ ì†¡ì‹ í•œë‹¤.
 
 void SerialPutString(char *str)
  {
 
-    while(*str != '\0')          // ¼ö½ÅµÈ ¹®ÀÚ°¡ Null ¹®ÀÚ( 0x00 )°¡ ¾Æ´Ï¸é 
+    while(*str != '\0')          // ìˆ˜ì‹ ëœ ë¬¸ìê°€ Null ë¬¸ì( 0x00 )ê°€ ì•„ë‹ˆë©´ 
     {
         SerialPutChar(*str++);
     }
-} // ¹®ÀÚ¿­À» ¼Û½ÅÇÑ´Ù.
-  // ÀÔ·Â   : str - ¼Û½ÅÇÑ ¹®ÀÚ¿­À» ÀúÀåÇÒ ¹öÆÛÀÇ ÁÖ¼Ò
+} // ë¬¸ìì—´ì„ ì†¡ì‹ í•œë‹¤.
+  // ì…ë ¥   : str - ì†¡ì‹ í•œ ë¬¸ìì—´ì„ ì €ì¥í•  ë²„í¼ì˜ ì£¼ì†Œ
 
 
-void Display_Number_LCD( unsigned int num, unsigned char digit )       // ºÎÈ£¾ø´Â Á¤¼öÇü º¯¼ö¸¦ 10Áø¼ö ÇüÅÂ·Î LCD ¿¡ µğ½ºÇÃ·¹ÀÌ 
+void Display_Number_LCD( unsigned int num, unsigned char digit )       // ë¶€í˜¸ì—†ëŠ” ì •ìˆ˜í˜• ë³€ìˆ˜ë¥¼ 10ì§„ìˆ˜ í˜•íƒœë¡œ LCD ì— ë””ìŠ¤í”Œë ˆì´ 
 {
 
-	HexToDec( num, 10); //10Áø¼ö·Î º¯È¯ 
+	HexToDec( num, 10); //10ì§„ìˆ˜ë¡œ ë³€í™˜ 
 
 	if( digit == 0 )     digit = 1 ;
 	if( digit > 5 )      digit = 5 ;
  
-    if( digit >= 5 )     LcdPutchar( NumToAsc(cnumber[4]) );  // 10000ÀÚ¸® µğ½ºÇÃ·¹ÀÌ
+    if( digit >= 5 )     LcdPutchar( NumToAsc(cnumber[4]) );  // 10000ìë¦¬ ë””ìŠ¤í”Œë ˆì´
 	
-	if( digit >= 4 )     LcdPutchar(NumToAsc(cnumber[3]));    // 1000ÀÚ¸® µğ½ºÇÃ·¹ÀÌ 
+	if( digit >= 4 )     LcdPutchar(NumToAsc(cnumber[3]));    // 1000ìë¦¬ ë””ìŠ¤í”Œë ˆì´ 
 
-	if( digit >= 3 )     LcdPutchar(NumToAsc(cnumber[2]));    // 100ÀÚ¸® µğ½ºÇÃ·¹ÀÌ 
+	if( digit >= 3 )     LcdPutchar(NumToAsc(cnumber[2]));    // 100ìë¦¬ ë””ìŠ¤í”Œë ˆì´ 
 
-	if( digit >= 2 )     LcdPutchar(NumToAsc(cnumber[1]));    // 10ÀÚ¸® µğ½ºÇÃ·¹ÀÌ
+	if( digit >= 2 )     LcdPutchar(NumToAsc(cnumber[1]));    // 10ìë¦¬ ë””ìŠ¤í”Œë ˆì´
 
-	if( digit >= 1 )     LcdPutchar(NumToAsc(cnumber[0]));    //  1ÀÚ¸® µğ½ºÇÃ·¹ÀÌ
+	if( digit >= 1 )     LcdPutchar(NumToAsc(cnumber[0]));    //  1ìë¦¬ ë””ìŠ¤í”Œë ˆì´
 
 }
 
 
-void Display_TMP_LCD( unsigned int tp  )       // ¿Âµµ¸¦ 10Áø¼ö ÇüÅÂ·Î LCD ¿¡ µğ½ºÇÃ·¹ÀÌ 
+void Display_TMP_LCD( unsigned int tp  )       // ì˜¨ë„ë¥¼ 10ì§„ìˆ˜ í˜•íƒœë¡œ LCD ì— ë””ìŠ¤í”Œë ˆì´ 
 {
 
-	HexToDec( tp, 10); //10Áø¼ö·Î º¯È¯ 
+	HexToDec( tp, 10); //10ì§„ìˆ˜ë¡œ ë³€í™˜ 
 
-    LcdPutchar(NumToAsc(cnumber[2]) );   // 10ÀÚ¸® µğ½ºÇÃ·¹ÀÌ
+    LcdPutchar(NumToAsc(cnumber[2]) );   // 10ìë¦¬ ë””ìŠ¤í”Œë ˆì´
 	
-    LcdPutchar(NumToAsc(cnumber[1]));    // 1ÀÚ¸® µğ½ºÇÃ·¹ÀÌ 
+    LcdPutchar(NumToAsc(cnumber[1]));    // 1ìë¦¬ ë””ìŠ¤í”Œë ˆì´ 
 
-    LcdPuts( ".");                       // ¼Ò¼ıÁ¡(.) µğ½ºÇÃ·¹ÀÌ 
+    LcdPuts( ".");                       // ì†Œìˆ«ì (.) ë””ìŠ¤í”Œë ˆì´ 
 
-    LcdPutchar(NumToAsc(cnumber[0]));    // 0.1 ÀÚ¸® µğ½ºÇÃ·¹ÀÌ 
+    LcdPutchar(NumToAsc(cnumber[0]));    // 0.1 ìë¦¬ ë””ìŠ¤í”Œë ˆì´ 
 }
 
 
@@ -316,14 +318,14 @@ char NumToAsc( unsigned char Num )
 
 void msec_delay(unsigned int n)
 {	
-	for(; n>0; n--)		// 1msec ½Ã°£ Áö¿¬À» nÈ¸ ¹İº¹
-		_delay_ms(1);		// 1msec ½Ã°£ Áö¿¬
+	for(; n>0; n--)		// 1msec ì‹œê°„ ì§€ì—°ì„ níšŒ ë°˜ë³µ
+		_delay_ms(1);		// 1msec ì‹œê°„ ì§€ì—°
 }
 
 void usec_delay(unsigned int n)
 {	
-	for(; n>0; n--)		// 1usec ½Ã°£ Áö¿¬À» nÈ¸ ¹İº¹
-		_delay_us(1);		// 1usec ½Ã°£ Áö¿¬
+	for(; n>0; n--)		// 1usec ì‹œê°„ ì§€ì—°ì„ níšŒ ë°˜ë³µ
+		_delay_us(1);		// 1usec ì‹œê°„ ì§€ì—°
 }
 
 
