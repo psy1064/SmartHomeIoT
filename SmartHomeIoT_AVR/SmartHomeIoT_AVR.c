@@ -18,8 +18,9 @@ char i_rh[5], d_rh[5], i_temp[5], d_temp[5];
 
 // 미세먼지 센서
 static char dust_count = 0;
-char dust[32] = {0};
-char pm10[2], pm10d[2];
+uint8_t dust[32] = {0};
+uint16_t pm10 ;
+char pm[3] = {0};
 
 // Blue tooth communication
 void init_serial(void) ;  //  Serial 토신포트 초기화
@@ -109,22 +110,11 @@ ISR(TIMER0_OVF_vect)   // Timer0 overflow interrupt( 10 msec)  service routine
     time_index++ ; 
 
 
-    if( time_index == 200 )    // 샘플링주기 10msec
+    if( time_index == 500 )    // 샘플링주기 10msec
     {       	
 	   	getDHT();
 	   	sendDHT();
 	   	sendDust();
-		if(sensor_time_index == 0)
-		{
-			// UCSR0B &= ~0x80;   // UART0 수신(RX) 완료 인터럽트 금지 
-			sensor_time_index = 1;
-		}
-		else
-		{
-			// UCSR0B |= 0x80;   // UART0 수신(RX) 완료 인터럽트 허용
-			sensor_time_index = 0;
-		}
-		
 		time_index = 0; 
    }
 }
@@ -132,30 +122,20 @@ ISR(TIMER0_OVF_vect)   // Timer0 overflow interrupt( 10 msec)  service routine
 ISR( USART0_RX_vect)
 {
 	dust[dust_count] = UDR0;
-	
-	LcdCommand(ALLCLR);
-	LcdMove(0,0);
-	//LcdPutchar(dust[dust_count]);
 	dust_count ++;
 
-	/*if(dust_count >= 32)
+	if(dust_count >= 32)
 	{
 		if((dust[0] == 0x42)&&(dust[1] == 0x4d))
 		{
-			itoa(dust[8],pm10,10);
-			itoa(dust[9],pm10d,10);
-
+			pm10 = (dust[14] << 8) + (dust[15]);
+			
+			itoa(pm10,pm,10);
 			LcdMove(1,5);
-			LcdPuts(pm10);
-			LcdMove(1,7);
-			LcdPuts(pm10d);
+			LcdPuts(pm);
 		}
-		dust_count = 0 ;
-		for(int i = 0 < i ; 32 ; i++)
-		{
-			dust[i] = 0;
-		}
-	}*/
+		dust_count = 0 ;		
+	}
 }
 
 ISR( USART1_RX_vect )
@@ -227,6 +207,7 @@ void init_serial(void)
     
     UBRR0H = 0x00;
     UBRR0L = 103;                     //Baud Rate 9600 
+
 	UCSR0B |= 0x80;   // UART0 수신(RX) 완료 인터럽트 허용 블루투스 통신
 
 	UCSR1A = 0x00;                    //초기화
