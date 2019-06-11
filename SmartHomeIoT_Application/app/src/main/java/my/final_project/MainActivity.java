@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 InitialActivity.btService = null;
                 if(alarmManager != null)                                                                    // 알람이 설정 되어 있었다면
                     alarm_Off();                                                                            // 알람 설정 해제
+                System.exit(0);                                                                     // 프로세스 종료
             }
         });
         builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
