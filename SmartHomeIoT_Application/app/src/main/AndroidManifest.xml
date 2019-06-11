@@ -14,27 +14,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WeatherActivity"></activity>
-
         <service
             android:name=".AlarmService"
             android:enabled="true"
             android:exported="true" />
-
-        <activity android:name=".initialActivity">
+        <activity android:name=".InitialActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".AlarmActivity" />
+        <activity android:name=".WeatherActivity"></activity>
         <activity
             android:name=".DeviceListActivity"
             android:theme="@android:style/Theme.DeviceDefault.Dialog" />
-
-        <receiver android:name=".Alarm_Receiver" />
+        <receiver android:name=".AlarmReceiver" />
     </application>
 
 </manifest>
