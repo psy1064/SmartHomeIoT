@@ -12,6 +12,10 @@ public class WeatherActivity extends AppCompatActivity {
         setContentView(R.layout.activity_weather);
 
         Intent intent = new Intent();
-        String dust = intent.getStringExtra("dust");
+        int dusts = intent.getIntExtra("dust",0);
+        if(dusts>30){
+
+        }
+
     }
 }

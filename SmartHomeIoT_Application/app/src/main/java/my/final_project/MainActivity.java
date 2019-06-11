@@ -94,10 +94,19 @@ public class MainActivity extends AppCompatActivity {
                                 dustText.setText("좋음\n"+sensor[2]+"㎍/m³");
                                 dustText.setTextColor(Color.BLUE);
                             }
-                            else {
+                            else if(dust>30 && dust<=80) {
+                                dustText.setText("보통\n"+sensor[2]+"㎍/m³");
+                                dustText.setTextColor(Color.GREEN);
+                            }
+                            else if(dust>80 && dust<=150) {
                                 dustText.setText("나쁨\n"+sensor[2]+"㎍/m³");
+                                dustText.setTextColor(Color.YELLOW);
+                            }
+                            else  {
+                                dustText.setText("매우나쁨\n"+sensor[2]+"㎍/m³");
                                 dustText.setTextColor(Color.RED);
                             }
+
 
                             dustText.setTextSize(27);
                             break;
@@ -183,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
         init();                 // findViewById 초기화
         changedBackground();    // 시간에 따라 배경 사진 변경
 
-        // showNotify();           // 실내의 온습도, 미세먼지 상황을 Notify
         SharedPreferences sf = getSharedPreferences("checked",MODE_PRIVATE);
         checkboxChecked = sf.getBoolean("checked", false);
         sf = getSharedPreferences("alarmMode", MODE_PRIVATE);
@@ -211,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), WeatherActivity.class);
-                intent.putExtra("dust", sensor[2]);
+                intent.putExtra("dust", dust);
                 startActivity(intent);
             }
         });
