@@ -7,28 +7,24 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import java.io.IOException;
 import java.util.Calendar;
 
 public class AlarmActivity extends AppCompatActivity {
+    Calendar calendar = Calendar.getInstance();
     TextView timeText;
     Button stopButton;
     MediaPlayer mediaPlayer;
-    CheckBox checkBox;
-    Button alarmButton;
     ImageView alarmImage;
     int alarmMode = 0;
-    Thread thread;
     boolean flag = true;
     public static final int MODE_REQUEST = 1 ;
-    public static final int MESSAGE_WRITE = 2;
+
     private static final int STATE_SENDING = 1;
     private static final int STATE_NO_SENDING = 2;
 
@@ -63,7 +59,6 @@ public class AlarmActivity extends AppCompatActivity {
             // Reset out string buffer to zero and clear the edit text field
         }
         mSendingState = STATE_NO_SENDING ;
-//      notify();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,19 +80,14 @@ public class AlarmActivity extends AppCompatActivity {
             Log.e(TAG, "블루투스 연결 오류");
         }
 
-
         timeText = (TextView)findViewById(R.id.timeText);
         stopButton = (Button)findViewById(R.id.stopButton);
-        alarmButton = (Button)findViewById(R.id.setAlarmTimeButton);
-        checkBox = (CheckBox)findViewById(R.id.checkBox);
         alarmImage = (ImageView)findViewById(R.id.alarmImage);
 
 
         alarmMode = MainActivity.alarmMode;
         Log.d("alarmMode","alarmMode" + alarmMode);
-
-        runTime();
-
+        run();
         switch (alarmMode) {
             case 0: {
                 mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.ringtone);
@@ -131,35 +121,29 @@ public class AlarmActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mediaPlayer.stop();
-                flag= false;
+                flag = false;
                 finish();
             }
         });
     }
-
-    public void runTime(){
-        thread = new Thread(new Runnable() {
+    public void run() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while(flag==true) {
-                    try{
-                        Calendar calendar = Calendar.getInstance();
-                        Log.d(TAG, "Thread run");
-                        if(calendar.get(Calendar.HOUR_OF_DAY) > 0 && calendar.get(Calendar.HOUR_OF_DAY) < 12) {
-                            Log.d(TAG,"get");
-                            timeText.setText("오전 " + calendar.get(Calendar.HOUR_OF_DAY)  +  "시 " + calendar.get(Calendar.MINUTE) + "분 " + calendar.get(Calendar.SECOND) + "초");
-                        }
-                        else if(calendar.get(Calendar.HOUR_OF_DAY) == 12) {
-                            timeText.setText("오후 " + calendar.get(Calendar.HOUR_OF_DAY)  +  "시 " + calendar.get(Calendar.MINUTE) + "분 " + calendar.get(Calendar.SECOND) + "초");
-                        }
-                        else if(calendar.get(Calendar.HOUR_OF_DAY) > 12 && calendar.get(Calendar.HOUR_OF_DAY) <24) {
-                            timeText.setText("오전 " + (calendar.get(Calendar.HOUR_OF_DAY)-12)  +  "시 " + calendar.get(Calendar.MINUTE) + "분 " + calendar.get(Calendar.SECOND) + "초");
-                        }
-                        else if(calendar.get(Calendar.HOUR_OF_DAY) == 0) {
+                while (flag == true) {
+                    try {
+                        calendar = Calendar.getInstance();
+                        if (calendar.get(Calendar.HOUR_OF_DAY) > 0 && calendar.get(Calendar.HOUR_OF_DAY) < 12) {
+                            timeText.setText("오전 " + calendar.get(Calendar.HOUR_OF_DAY) + "시 " + calendar.get(Calendar.MINUTE) + "분 " + calendar.get(Calendar.SECOND) + "초");
+                        } else if (calendar.get(Calendar.HOUR_OF_DAY) == 12) {
+                            timeText.setText("오후 " + calendar.get(Calendar.HOUR_OF_DAY) + "시 " + calendar.get(Calendar.MINUTE) + "분 " + calendar.get(Calendar.SECOND) + "초");
+                        } else if (calendar.get(Calendar.HOUR_OF_DAY) > 12 && calendar.get(Calendar.HOUR_OF_DAY) < 24) {
+                            timeText.setText("오후 " + (calendar.get(Calendar.HOUR_OF_DAY) - 12) + "시 " + calendar.get(Calendar.MINUTE) + "분 " + calendar.get(Calendar.SECOND) + "초");
+                        } else if (calendar.get(Calendar.HOUR_OF_DAY) == 0) {
                             timeText.setText("오전 0시 " + calendar.get(Calendar.MINUTE) + "분 " + calendar.get(Calendar.SECOND) + "초");
                         }
                         Thread.sleep(1000);
-                    } catch (InterruptedException e) {  }
+                    } catch (InterruptedException ex) {}
                 }
             }
         });

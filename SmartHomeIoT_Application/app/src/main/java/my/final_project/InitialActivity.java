@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 public class InitialActivity extends AppCompatActivity {
     Button bluetoothOnButton;
     Button bluetoothListButton;

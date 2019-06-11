@@ -301,7 +301,7 @@ public class BluetoothService {
             byte[] buffer = new byte[1024];
             int bytes;
             int bytes_tmp = 0;
-            int temp_Length = 9;
+
             String temp = "";
             // Keep listening to the InputStream while connected
             while (true) {
@@ -312,18 +312,16 @@ public class BluetoothService {
                     Log.d(TAG, "byte = " + bytes);
                     String tmp = new String(buffer,0,bytes);
 
-                    bytes_tmp += bytes;
-                    if(bytes_tmp <= temp_Length) {
+                    if(tmp.charAt(bytes-1) != '/'){
                         temp += tmp;
                     }
+                    else {
+                        temp += tmp;
 
-                    if(bytes_tmp == temp_Length) {
-                        Log.d(TAG,"receive success");
-                        bytes_tmp = 0;
-                        mHandler.obtainMessage(MainActivity.MESSAGE_WRITE,1,1,temp).sendToTarget();
+                        Log.d(TAG, "receive success" + temp);
+                        mHandler.obtainMessage(MainActivity.MESSAGE_WRITE, 1, 1, temp).sendToTarget();
                         temp = "";
                     }
-
 
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);

@@ -7,7 +7,7 @@ c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
                               c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm128.o (exit)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
-                              SmartHomeIoT_AVR.o (__do_clear_bss)
+                              dht.o (__do_clear_bss)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(itoa.o)
                               SmartHomeIoT_AVR.o (itoa)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrev.o)
@@ -26,7 +26,6 @@ d_temp              0x5               SmartHomeIoT_AVR.o
 I_Temp              0x1               SmartHomeIoT_AVR.o
 I_RH                0x1               SmartHomeIoT_AVR.o
 D_Temp              0x1               SmartHomeIoT_AVR.o
-pm10d               0x2               SmartHomeIoT_AVR.o
 
 Memory Configuration
 
@@ -43,9 +42,9 @@ Linker script and memory map
 
 Address of section .data set to 0x800100
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm128.o
-LOAD SmartHomeIoT_AVR.o
 LOAD dht.o
 LOAD lcd.o
+LOAD SmartHomeIoT_AVR.o
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
@@ -140,7 +139,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0xa1e
+.text           0x00000000      0xaa8
  *(.vectors)
  .vectors       0x00000000       0x8c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm128.o
                 0x00000000                __vectors
@@ -228,65 +227,65 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
                 0x000000ca                __vector_14
                 0x000000ca                __vector_10
                 0x000000ca                __vector_20
- .text          0x000000ce      0x6b2 SmartHomeIoT_AVR.o
-                0x000002a8                usec_delay
-                0x00000146                init_serial
-                0x00000142                pin_init
-                0x0000017a                Servo_On
-                0x0000022e                sendDust
-                0x00000340                Display_TMP_LCD
-                0x000002ba                Display_Number_LCD
-                0x00000388                getDHT
-                0x000000ce                __vector_30
-                0x000001b8                SerialPutChar
-                0x000001e2                sendDHT
-                0x000001c8                SerialPutString
-                0x00000294                msec_delay
-                0x0000063a                init
-                0x000006b2                main
-                0x00000238                HexToDec
-                0x00000288                NumToAsc
-                0x000004f4                __vector_16
-                0x00000574                __vector_18
-                0x00000198                Servo_Off
- .text          0x00000780       0x98 dht.o
-                0x00000780                Request
-                0x000007e4                Receive_data_dummy
-                0x000007b0                Receive_data
-                0x000007a0                Response
- .text          0x00000818      0x152 lcd.o
-                0x00000818                LcdPutchar
-                0x0000088a                LcdCommand
-                0x00000850                LcdPuts
-                0x000008fc                LcdMove
-                0x000008c4                LcdNewchar
-                0x0000091c                LcdInit
- .text          0x0000096a        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
- .text          0x0000096a        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
- .text          0x0000096a        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
- .text          0x0000096a        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
- .text          0x0000096a        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(itoa.o)
- .text          0x0000096a        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrev.o)
-                0x0000096a                . = ALIGN (0x2)
+ .text          0x000000ce       0x98 dht.o
+                0x000000ce                Request
+                0x00000132                Receive_data_dummy
+                0x000000fe                Receive_data
+                0x000000ee                Response
+ .text          0x00000166      0x152 lcd.o
+                0x00000166                LcdPutchar
+                0x000001d8                LcdCommand
+                0x0000019e                LcdPuts
+                0x0000024a                LcdMove
+                0x00000212                LcdNewchar
+                0x0000026a                LcdInit
+ .text          0x000002b8      0x73c SmartHomeIoT_AVR.o
+                0x000004ce                usec_delay
+                0x00000330                init_serial
+                0x0000032c                pin_init
+                0x00000364                Servo_On
+                0x00000566                Display_TMP_LCD
+                0x000004e0                Display_Number_LCD
+                0x000005ae                getDHT
+                0x000002b8                __vector_30
+                0x000003c4                SerialPutChar
+                0x000003d4                SerialPutString
+                0x000004ba                msec_delay
+                0x00000890                init
+                0x00000908                main
+                0x000003ee                sendData
+                0x0000045e                HexToDec
+                0x000004ae                NumToAsc
+                0x0000072a                __vector_16
+                0x000007a2                __vector_18
+                0x00000384                Servo_Off
+                0x000003a4                Servo_SET
+ .text          0x000009f4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+ .text          0x000009f4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+ .text          0x000009f4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .text          0x000009f4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .text          0x000009f4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(itoa.o)
+ .text          0x000009f4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrev.o)
+                0x000009f4                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x0000096a       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
-                0x0000096a                __udivmodhi4
- .text.libgcc   0x00000992       0x26 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
-                0x00000992                __divmodhi4
-                0x00000992                _div
- .text.libgcc   0x000009b8        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
- .text.libgcc   0x000009b8        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x000009f4       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+                0x000009f4                __udivmodhi4
+ .text.libgcc   0x00000a1c       0x26 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+                0x00000a1c                __divmodhi4
+                0x00000a1c                _div
+ .text.libgcc   0x00000a42        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .text.libgcc   0x00000a42        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
  .text.avr-libc
-                0x000009b8       0x42 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(itoa.o)
-                0x000009b8                itoa
+                0x00000a42       0x42 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(itoa.o)
+                0x00000a42                itoa
  .text.avr-libc
-                0x000009fa       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrev.o)
-                0x000009fa                strrev
-                0x00000a1a                . = ALIGN (0x2)
+                0x00000a84       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrev.o)
+                0x00000a84                strrev
+                0x00000aa4                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000a1a        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
-                0x00000a1a                exit
-                0x00000a1a                _exit
+ .fini9         0x00000aa4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+                0x00000aa4                exit
+                0x00000aa4                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -305,17 +304,17 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000a1a        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .fini0         0x00000aa4        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000a1e                _etext = .
+                0x00000aa8                _etext = .
 
-.data           0x00800100       0x48 load address 0x00000a1e
+.data           0x00800100       0x48 load address 0x00000aa8
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm128.o
+ .data          0x00800100        0x0 dht.o
+ .data          0x00800100        0x0 lcd.o
  .data          0x00800100       0x47 SmartHomeIoT_AVR.o
- .data          0x00800147        0x0 dht.o
- .data          0x00800147        0x0 lcd.o
  .data          0x00800147        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
  .data          0x00800147        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
  .data          0x00800147        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
@@ -331,45 +330,46 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
                 0x00800148                _edata = .
                 0x00800148                PROVIDE (__data_end, .)
 
-.bss            0x00800148       0x4e
+.bss            0x00800148       0x52
                 0x00800148                PROVIDE (__bss_start, .)
  *(.bss)
  .bss           0x00800148        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm128.o
- .bss           0x00800148       0x30 SmartHomeIoT_AVR.o
-                0x00800148                dust
- .bss           0x00800178        0x1 dht.o
-                0x00800178                c
- .bss           0x00800179        0x0 lcd.o
- .bss           0x00800179        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
- .bss           0x00800179        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
- .bss           0x00800179        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
- .bss           0x00800179        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
- .bss           0x00800179        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(itoa.o)
- .bss           0x00800179        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrev.o)
+ .bss           0x00800148        0x1 dht.o
+                0x00800148                c
+ .bss           0x00800149        0x0 lcd.o
+ .bss           0x00800149       0x36 SmartHomeIoT_AVR.o
+                0x00800149                dust
+                0x00800169                pm10_old
+                0x0080016b                pm
+ .bss           0x0080017f        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_udivmodhi4.o)
+ .bss           0x0080017f        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_divmodhi4.o)
+ .bss           0x0080017f        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .bss           0x0080017f        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
+ .bss           0x0080017f        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(itoa.o)
+ .bss           0x0080017f        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51\libc.a(strrev.o)
  *(.bss*)
  *(COMMON)
- COMMON         0x00800179       0x1d SmartHomeIoT_AVR.o
-                0x00800179                pm10
-                0x0080017b                i_temp
-                0x00800180                i_rh
-                0x00800185                d_rh
-                0x0080018a                D_RH
-                0x0080018b                CheckSum
-                0x0080018c                d_temp
-                0x00800191                I_Temp
-                0x00800192                I_RH
-                0x00800193                D_Temp
-                0x00800194                pm10d
-                0x00800196                PROVIDE (__bss_end, .)
-                0x00000a1e                __data_load_start = LOADADDR (.data)
-                0x00000a66                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x0080017f       0x1b SmartHomeIoT_AVR.o
+                0x0080017f                pm10
+                0x00800181                i_temp
+                0x00800186                i_rh
+                0x0080018b                d_rh
+                0x00800190                D_RH
+                0x00800191                CheckSum
+                0x00800192                d_temp
+                0x00800197                I_Temp
+                0x00800198                I_RH
+                0x00800199                D_Temp
+                0x0080019a                PROVIDE (__bss_end, .)
+                0x00000aa8                __data_load_start = LOADADDR (.data)
+                0x00000af0                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800196        0x0
-                0x00800196                PROVIDE (__noinit_start, .)
+.noinit         0x0080019a        0x0
+                0x0080019a                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800196                PROVIDE (__noinit_end, .)
-                0x00800196                _end = .
-                0x00800196                PROVIDE (__heap_start, .)
+                0x0080019a                PROVIDE (__noinit_end, .)
+                0x0080019a                _end = .
+                0x0080019a                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -423,67 +423,67 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
 .debug_aranges  0x00000000       0x60
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x20 SmartHomeIoT_AVR.o
+                0x00000000       0x20 dht.o
  .debug_aranges
-                0x00000020       0x20 dht.o
+                0x00000020       0x20 lcd.o
  .debug_aranges
-                0x00000040       0x20 lcd.o
+                0x00000040       0x20 SmartHomeIoT_AVR.o
 
 .debug_pubnames
-                0x00000000      0x26e
+                0x00000000      0x27a
  *(.debug_pubnames)
  .debug_pubnames
-                0x00000000      0x1b2 SmartHomeIoT_AVR.o
+                0x00000000       0x59 dht.o
  .debug_pubnames
-                0x000001b2       0x59 dht.o
+                0x00000059       0x63 lcd.o
  .debug_pubnames
-                0x0000020b       0x63 lcd.o
+                0x000000bc      0x1be SmartHomeIoT_AVR.o
 
-.debug_info     0x00000000     0x115e
+.debug_info     0x00000000     0x11e5
  *(.debug_info)
- .debug_info    0x00000000      0x858 SmartHomeIoT_AVR.o
- .debug_info    0x00000858      0x296 dht.o
- .debug_info    0x00000aee      0x670 lcd.o
+ .debug_info    0x00000000      0x296 dht.o
+ .debug_info    0x00000296      0x670 lcd.o
+ .debug_info    0x00000906      0x8df SmartHomeIoT_AVR.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x535
+.debug_abbrev   0x00000000      0x562
  *(.debug_abbrev)
- .debug_abbrev  0x00000000      0x2ae SmartHomeIoT_AVR.o
- .debug_abbrev  0x000002ae      0x12f dht.o
- .debug_abbrev  0x000003dd      0x158 lcd.o
+ .debug_abbrev  0x00000000      0x12f dht.o
+ .debug_abbrev  0x0000012f      0x158 lcd.o
+ .debug_abbrev  0x00000287      0x2db SmartHomeIoT_AVR.o
 
-.debug_line     0x00000000      0xd68
+.debug_line     0x00000000      0xddc
  *(.debug_line)
- .debug_line    0x00000000      0x868 SmartHomeIoT_AVR.o
- .debug_line    0x00000868      0x22f dht.o
- .debug_line    0x00000a97      0x2d1 lcd.o
+ .debug_line    0x00000000      0x22f dht.o
+ .debug_line    0x0000022f      0x2d1 lcd.o
+ .debug_line    0x00000500      0x8dc SmartHomeIoT_AVR.o
 
 .debug_frame    0x00000000      0x220
  *(.debug_frame)
- .debug_frame   0x00000000      0x150 SmartHomeIoT_AVR.o
- .debug_frame   0x00000150       0x50 dht.o
- .debug_frame   0x000001a0       0x80 lcd.o
+ .debug_frame   0x00000000       0x50 dht.o
+ .debug_frame   0x00000050       0x80 lcd.o
+ .debug_frame   0x000000d0      0x150 SmartHomeIoT_AVR.o
 
-.debug_str      0x00000000      0x38b
+.debug_str      0x00000000      0x396
  *(.debug_str)
- .debug_str     0x00000000      0x2e2 SmartHomeIoT_AVR.o
-                                0x320 (size before relaxing)
- .debug_str     0x000002e2       0x3a dht.o
+ .debug_str     0x00000000      0x123 dht.o
                                 0x157 (size before relaxing)
- .debug_str     0x0000031c       0x6f lcd.o
+ .debug_str     0x00000123       0x6f lcd.o
                                 0x19e (size before relaxing)
+ .debug_str     0x00000192      0x204 SmartHomeIoT_AVR.o
+                                0x32b (size before relaxing)
 
-.debug_loc      0x00000000      0x500
+.debug_loc      0x00000000      0x551
  *(.debug_loc)
- .debug_loc     0x00000000      0x2d4 SmartHomeIoT_AVR.o
- .debug_loc     0x000002d4       0x18 dht.o
- .debug_loc     0x000002ec      0x214 lcd.o
+ .debug_loc     0x00000000       0x18 dht.o
+ .debug_loc     0x00000018      0x214 lcd.o
+ .debug_loc     0x0000022c      0x325 SmartHomeIoT_AVR.o
 
 .debug_macinfo
  *(.debug_macinfo)
 OUTPUT(SmartHomeIoT_AVR.elf elf32-avr)
 LOAD linker stubs
 
-.debug_ranges   0x00000000       0xa8
- .debug_ranges  0x00000000       0x18 SmartHomeIoT_AVR.o
- .debug_ranges  0x00000018       0x90 dht.o
+.debug_ranges   0x00000000      0x108
+ .debug_ranges  0x00000000       0x90 dht.o
+ .debug_ranges  0x00000090       0x78 SmartHomeIoT_AVR.o

@@ -18,6 +18,7 @@
             android:name=".AlarmService"
             android:enabled="true"
             android:exported="true" />
+
         <activity android:name=".InitialActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
