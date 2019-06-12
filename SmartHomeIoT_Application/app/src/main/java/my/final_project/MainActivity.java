@@ -96,15 +96,15 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else if(dust>30 && dust<=80) {
                                 dustText.setText("보통\n("+sensor[2]+"㎍/m³)");
-                                dustText.setTextColor(Color.GREEN);
+                                dustText.setTextColor(Color.parseColor("#52E252"));
                             }
                             else if(dust>80 && dust<=150) {
                                 dustText.setText("나쁨\n("+sensor[2]+"㎍/m³)");
-                                dustText.setTextColor(Color.YELLOW);
+                                dustText.setTextColor(Color.parseColor("#FFC81E"));
                             }
                             else  {
                                 dustText.setText("매우나쁨\n("+sensor[2]+"㎍/m³)");
-                                dustText.setTextColor(Color.RED);
+                                dustText.setTextColor(Color.parseColor("#EB0000"));
                             }
 
                             dustText.setTextSize(27);
