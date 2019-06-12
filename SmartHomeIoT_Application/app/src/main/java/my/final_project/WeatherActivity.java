@@ -29,8 +29,7 @@ public class WeatherActivity extends AppCompatActivity {
         imageView3=(ImageView) findViewById(R.id.imageView3);
 
         Intent intent = new Intent();
-       // int dusts = intent.getIntExtra("dust",0);
-        int dusts = 160;
+        int dusts = intent.getIntExtra("dust",0);
         if(dusts<=30){
             textView.setText("매우좋음");
             textView2.setText("미세먼지가 없으니 추천할게 없지 뭐야");
