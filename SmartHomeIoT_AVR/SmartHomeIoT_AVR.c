@@ -7,55 +7,57 @@
 #include "lcd.h"
 
 // 서보모터 사용
-static volatile unsigned char    Pos_CMD = 0 ;    // 서보 위치 명령 ( 범위 : 0 - 180,  단위:  도 )
-void Servo_On();
-void Servo_Off();
-void Servo_SET();
+static volatile unsigned char Pos_CMD = 0 ;    	// 서보 위치 명령 ( 범위 : 0 - 180,  단위:  도 )
+void Servo_On();							  	// 전등 스위치 On
+void Servo_Off();								// 전등 스위치 Off
+void Servo_SET();								// 전등 스위치 중간으로 
 
 // 온습도 센서
-void getDHT();
-uint8_t I_RH,D_RH,I_Temp,D_Temp,CheckSum;
-char i_rh[5], d_rh[5], i_temp[5], d_temp[5];
+void getDHT();									// 센서 데이터 수집
+char i_rh[5], d_rh[5], i_temp[5], d_temp[5];	// 습도, 온도 변수(8비트 + '.' 8비트)
+uint8_t I_RH,D_RH,I_Temp,D_Temp,CheckSum;		// 8비트 변수
 
 // 미세먼지 센서
-static char dust_count = 0;
-uint8_t dust[32] = {0};
-uint16_t pm10 ;
-uint16_t pm10_old = 0;
-char pm[3] = {0};
+static char dust_count = 0;						
+uint8_t dust[32] = {0};							// 32개의 데이터를 받을 배열
+uint16_t pm10 ;									// 16비트 미세먼지 값
+uint16_t pm10_old = 0;							// 값이 튀는것을 방지하기 위한 직전 값
+char pm[3] = {0};								// 미세먼지 값 저장 배열
 
-// Blue tooth communication
-void init_serial(void) ;  //  Serial 토신포트 초기화
-void SerialPutChar(char ch);
-void SerialPutString(char str[]);
-void sendData();
+// 블루투스 통신
+void init_serial(void) ;  						// Serial 통신포트 설정(USART0, USART1)
+void SerialPutChar(char ch);					// 한글자 전송
+void SerialPutString(char str[]);				// 문자열 전송
+void sendData();								// 센서 값 전송
 
-static volatile  char  recv_cnt = 0, rdata = 0, new_recv_flag = 0, rdata_old = 0 ;  
-static volatile  char recv_data[3] = {0,0,0};
-static volatile unsigned char   Command_Error_Flag = 0 ; 
+static volatile char recv_cnt = 0, rdata = 0, new_recv_flag = 0 ;  
+static volatile char recv_data[3] = {0,0,0}; 
+static volatile unsigned char Command_Error_Flag = 0 ; 
 
-static volatile char Cmd_Message_1[] = {"on" } ;     //  Blutooth Command
-static volatile char Cmd_Message_2[] = {"off"} ;  
+static volatile char Cmd_Message_1[] = {"on" }; // Motor On  명령어
+static volatile char Cmd_Message_2[] = {"off"}; // Motor Off 명령어
 
 // 범용 
-void Display_Number_LCD( unsigned int num, unsigned char digit ) ;    // 부호없는 정수형 변수를 10진수 형태로 LCD 에 디스플레이 
+void Display_Number_LCD( unsigned int num, unsigned char digit ) ;  // 부호없는 정수형 변수를 10진수 형태로 LCD 에 디스플레이 
 void HexToDec( unsigned short num, unsigned short radix); 
 char NumToAsc( unsigned char Num ); 
 void msec_delay(unsigned int n);
 void usec_delay(unsigned int n);
-void pin_init();		// 핀 설정 초기화
-void init();			// 초기 설정
+
+void pin_init();													// 핀 설정 설정
+void init();														// Interrupt , Timer, Register 설정
+
 static volatile unsigned char cnumber[5] = {0, 0, 0, 0, 0}; 
 
 int main() 
 {   
-	char eq_count1=0, eq_count2=0, cmd_data = 0xFF  ;  	  
+	char eq_count1=0, eq_count2=0, cmd_data = 0xFF ;  	  
     unsigned char i=0 ;
 	
-	pin_init();		  // Pin 초기화
-	init();			  // Interrupt , Timer, Register 초기화 
-	init_serial() ;   // Serial Port (USART0, 1) 초기화
-	Servo_SET();
+	pin_init();		  	// 핀 설정
+	init();			  	// Interrupt , Timer, Register 설정
+	init_serial() ;   	// Serial 통신포트 설정(USART0, USART1)
+	Servo_SET();		// 모터 중앙에 위치
 	while (1) 
 	{ 
 		if( new_recv_flag == 1)
@@ -79,8 +81,7 @@ int main()
 			LcdCommand(ALLCLR);
 			LcdMove(0,0);
 			LcdPuts("Turn On!!");
-			
-		}
+		} // On 명령 들어왔을 때
 		else if(cmd_data == 2)
 		{
 			Servo_Off();
@@ -89,7 +90,7 @@ int main()
 			LcdMove(0,0);
 			LcdPuts("Turn Off!!");
 
-		}
+		} // Off 명령 들어왔을 때
 		else if(cmd_data == 0xFE)
 		{
 			LcdCommand(ALLCLR);
@@ -103,22 +104,21 @@ int main()
 	}
 } 
 
-ISR(TIMER0_OVF_vect)   // Timer0 overflow interrupt( 10 msec)  service routine
+ISR(TIMER0_OVF_vect)   // Timer0 overflow interrupt (10 msec)  service routine
 {
 
 	static unsigned short  time_index = 0, send_time_index = 0;
 
-    TCNT0 = 256 - 156;       //  내부클럭주기 = 1024/ (16x10^6) = 64 usec,  
-                             //  오버플로인터럽트 주기 = 10msec
-                             //  156 = 10msec/ 64usec
+    TCNT0 = 256 - 156;       	// 내부클럭주기 = 1024/ (16x10^6) = 64 usec,  
+                             	// 오버플로인터럽트 주기 = 10msec
+                             	// 156 = 10msec/ 64usec
 
     time_index++ ; 
 
-
-    if( time_index == 200 )    // 샘플링주기 10msec
+    if( time_index == 200 )		// 샘플링주기 10msec * 200 = 2sec
     {       	
-	   	getDHT();
-	   	sendData();
+	   	getDHT();				// DHT 센서 데이터 수집
+	   	sendData();				// 수집된 데이터 전송
 		
 		time_index = 0; 
    }
@@ -150,7 +150,7 @@ ISR( USART0_RX_vect)
 				{
 					pm10_old = pm10;
 				}
-			}
+			} // 값이 튀는것을 방지
 			itoa(pm10,pm,10);
 
 			LcdMove(1,5);
@@ -158,7 +158,7 @@ ISR( USART0_RX_vect)
 		}
 		dust_count = 0 ;		
 	}
-}
+} // PMS7003 센서 데이터 수집 인터럽트 
 
 ISR( USART1_RX_vect )
 {
@@ -180,8 +180,7 @@ ISR( USART1_RX_vect )
         
 		new_recv_flag = 1;
     }
-}
-
+} // 블루투스 수신 인터럽트 
 
 void pin_init()
 {
@@ -199,49 +198,49 @@ void init()
 	LcdMove(1,0);
 	LcdPuts("Dust=");
 
-
-/**** Timer0 Overflow Interrupt  ******/
-
 	TCCR0 = 0x00; 
-    TCNT0 = 256 - 100;       //  내부클럭주기 = 8/ (16x10^6) = 0.5 usec,  
-                             //  오버플로인터럽트 주기 = 50usec
-                             //  156 = 50usec/ 0.5use
+    TCNT0 = 256 - 100;      // 내부클럭주기 = 8/ (16x10^6) = 0.5 usec,  
+                            // 오버플로인터럽트 주기 = 50usec
+                            // 156 = 50usec/ 0.5use
 
-	TIMSK = 0x01;  // Timer0 overflow interrupt enable 
+	TIMSK = 0x01;  			// Timer0 overflow interrupt enable 
 	
-	TCCR0 |= 0x07; // Clock Prescaler N=1024 (Timer 0 Start)
+	TCCR0 |= 0x07; 			// Clock Prescaler N=1024 (Timer 0 Start)
 
-/**** Motor PWM  ******/
+	// Timer0 Overflow Interrupt 설정 
 
-	TCCR2 |= 0x68;   //  Trigger signal (OC2)   발생 :  WGM20(bit6)=1,  WGM21(bit3)=1,  COM21(bit5)=1, COM20(bit4)=0 ,  
-	TCCR2 |= 0x05;   //  1024분주,  내부클럭주기 = 64usec  : CS22(bit2) = 1, CS21(bit1) = 0,  CS20(bit0) = 1 
+
+
+	TCCR2 |= 0x68;   		// Trigger signal (OC2)   발생 :  WGM20(bit6)=1,  WGM21(bit3)=1,  COM21(bit5)=1, COM20(bit4)=0 ,  
+	TCCR2 |= 0x05;   		// 1024분주,  내부클럭주기 = 64usec  : CS22(bit2) = 1, CS21(bit1) = 0,  CS20(bit0) = 1 
 
 	Pos_CMD = 90 ;
     OCR2 = ( 135 * Pos_CMD )/900 + 10 ; 
+	
+	// Motor PWM 설정 
 
 	sei();         // Global Interrupt Enable 
 }
 void init_serial(void)
 {
-    UCSR0A = 0x00;                    //초기화
-    UCSR0B = 0x18;                    //송수신허용,  송수신 인터럽트 금지
-    UCSR0C = 0x06;                    //데이터 전송비트 수 8비트로 설정.
+    UCSR0A = 0x00;          // 초기화
+    UCSR0B = 0x18;          // 송수신허용,  송수신 인터럽트 금지
+    UCSR0C = 0x06;          // 데이터 전송비트 수 8비트로 설정.
     
     UBRR0H = 0x00;
-    UBRR0L = 103;                     //Baud Rate 9600 
+    UBRR0L = 103;           // Baud Rate 9600 
 
-	UCSR0B |= 0x80;   // UART0 수신(RX) 완료 인터럽트 허용 블루투스 통신
+	UCSR0B |= 0x80;   		// UART0 수신(RX) 완료 인터럽트 허용 PMS7003 데이터 수집
 
-	UCSR1A = 0x00;                    //초기화
-    UCSR1B = 0x18;                    //송수신허용,  송수신 인터럽트 금지
-    UCSR1C = 0x06;                    //데이터 전송비트 수 8비트로 설정.
+	UCSR1A = 0x00;          // 초기화
+    UCSR1B = 0x18;          // 송수신허용,  송수신 인터럽트 금지
+    UCSR1C = 0x06;			// 데이터 전송비트 수 8비트로 설정.
     
     UBRR1H = 0x00;
-    UBRR1L = 103;                     //Baud Rate 9600 
+    UBRR1L = 103;			// Baud Rate 9600 
 
-	UCSR1B |= 0x80;   // UART1 수신(RX) 완료 인터럽트 허용 블루투스 통신
+	UCSR1B |= 0x80;   		// UART1 수신(RX) 완료 인터럽트 허용 블루투스 통신
 }
-
 
 void sendData()
 {
@@ -259,13 +258,13 @@ void sendData()
 
 void getDHT()
 {
-	Request();		/* send start pulse */
-	Response();		/* receive response */
-	I_RH=Receive_data();	/* store first eight bit in I_RH */
-	D_RH=Receive_data();	/* store next eight bit in D_RH */
-	I_Temp=Receive_data();	/* store next eight bit in I_Temp */
-	D_Temp=Receive_data();	/* store next eight bit in D_Temp */
-	CheckSum=Receive_data();/* store next eight bit in CheckSum */
+	Request();					// 데이터 전송 요청
+	Response();					// 요청 대기
+	I_RH=Receive_data();		// 습도 상위 8비트 전송
+	D_RH=Receive_data();		// 습도 하위 8비트 전송
+	I_Temp=Receive_data();		// 온도 상위 8비트 전송
+	D_Temp=Receive_data();		// 온도 하위 8비트 전송
+	CheckSum=Receive_data();	// CheckSum 비트 = 습도 16비트 + 온도 16비트 
 	
 	if ((I_RH + D_RH + I_Temp + D_Temp) != CheckSum)
 	{
@@ -297,7 +296,7 @@ void getDHT()
 		LcdMove(0,7);
 		LcdPuts("%");
 
-		//////////// 습도 Display
+		// 습도 Display
 
 		itoa(I_Temp,i_temp,10);
 		LcdMove(0,11);
@@ -311,9 +310,10 @@ void getDHT()
 		LcdMove(0,15);
 		LcdPuts("C");
 		
+		// 온도 Display
 	}
 				
-	_delay_ms(10);
+	msec_delay(10);
 }
 
 void Servo_On()
@@ -339,15 +339,12 @@ void SerialPutChar(char ch)
 } // 한 문자를 송신한다.
 
 void SerialPutString(char *str)
- {
-
-    while(*str != '\0')          // 수신된 문자가 Null 문자( 0x00 )가 아니면 
+{
+    while(*str != '\0')          			// 수신된 문자가 Null 문자( 0x00 )가 아니면 
     {
         SerialPutChar(*str++);
     }
 } // 문자열을 송신한다.
-  // 입력   : str - 송신한 문자열을 저장할 버퍼의 주소
-
 
 void Display_Number_LCD( unsigned int num, unsigned char digit )       // 부호없는 정수형 변수를 10진수 형태로 LCD 에 디스플레이 
 {
