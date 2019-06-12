@@ -91,22 +91,21 @@ public class MainActivity extends AppCompatActivity {
                             sensor[2] = sensor[2].substring(0, sensor[2].length() -1);
                             dust = Integer.parseInt(sensor[2]);
                             if(dust >= 0 && dust <= 30) {
-                                dustText.setText("좋음\n"+sensor[2]+"㎍/m³");
+                                dustText.setText("좋음\n("+sensor[2]+"㎍/m³)");
                                 dustText.setTextColor(Color.BLUE);
                             }
                             else if(dust>30 && dust<=80) {
-                                dustText.setText("보통\n"+sensor[2]+"㎍/m³");
+                                dustText.setText("보통\n("+sensor[2]+"㎍/m³)");
                                 dustText.setTextColor(Color.GREEN);
                             }
                             else if(dust>80 && dust<=150) {
-                                dustText.setText("나쁨\n"+sensor[2]+"㎍/m³");
+                                dustText.setText("나쁨\n("+sensor[2]+"㎍/m³)");
                                 dustText.setTextColor(Color.YELLOW);
                             }
                             else  {
-                                dustText.setText("매우나쁨\n"+sensor[2]+"㎍/m³");
+                                dustText.setText("매우나쁨\n("+sensor[2]+"㎍/m³)");
                                 dustText.setTextColor(Color.RED);
                             }
-
 
                             dustText.setTextSize(27);
                             break;
