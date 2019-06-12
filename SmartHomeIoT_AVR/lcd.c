@@ -2,8 +2,8 @@
 #include<util/delay.h>
 #include "lcd.h"
 
-#define LCD_PORT	PORTC
-#define LCD_DDR		DDRC
+#define LCD_PORT	PORTA
+#define LCD_DDR		DDRA
 
 static void checkbusy(void);
 static void write_command(char command);
