@@ -34,8 +34,8 @@
         android:layout_marginRight="106dp"
         android:background="@drawable/oval_shape"
         android:gravity="center"
-        android:text="매우나쁨\n(151㎍/m³)"
-        android:textColor="#F44336"
+        android:text="-"
+        android:textColor="@android:color/black"
         android:textSize="20sp" />
 
     <TextView
@@ -54,7 +54,7 @@
         android:layout_marginRight="181dp"
         android:background="@drawable/oval_shape"
         android:gravity="center"
-        android:text="26.0 C"
+        android:text="-"
         android:textSize="30sp" />
 
 
@@ -69,11 +69,11 @@
         android:layout_marginStart="181dp"
         android:layout_marginLeft="181dp"
         android:layout_marginTop="185dp"
-        android:layout_marginRight="30dp"
         android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
         android:background="@drawable/oval_shape"
         android:gravity="center"
-        android:text="30.5 %"
+        android:text="-"
         android:textSize="30sp" />
 
     <ImageView
