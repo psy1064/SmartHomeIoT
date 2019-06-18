@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String item [] = {"TimePickerMode 세팅", "AlarmMode 세팅"};
                 final String item1 [] = {"Circle Mode", "Spinner Mode"};
-                final String item2 [] = {"기본","전기고문","김수미"};
+                final String item2 [] = {"기본","전기고문","김수미","색소폰"};
                 final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
                 alertBuilder.setTitle("설정");
                 alertBuilder.setItems(item, new DialogInterface.OnClickListener() {
@@ -419,7 +419,16 @@ public class MainActivity extends AppCompatActivity {
                                                 editor.commit();
                                                 break;
                                             }
+                                            case 3:{
+                                                Toast.makeText(getApplicationContext(), "색소폰 Mode", Toast.LENGTH_LONG).show();
+                                                alarmMode = 3;
+                                                SharedPreferences sf = getSharedPreferences("alarmMode", MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sf.edit();
+                                                editor.putInt("alarmMode",3);
+                                                editor.commit();
+                                            }
                                         }
+
                                     }
                                 });
                                 AlertDialog alertDialog1 = alertBuilder1.create();

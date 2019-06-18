@@ -28,7 +28,7 @@ public class WeatherActivity extends AppCompatActivity {
         imageView2=(ImageView) findViewById(R.id.imageView2);
         imageView3=(ImageView) findViewById(R.id.imageView3);
 
-        Intent intent = new Intent();
+        Intent intent = getIntent();
         int dusts = intent.getIntExtra("dust",0);
         if(dusts<=30){
             textView.setText("매우좋음");

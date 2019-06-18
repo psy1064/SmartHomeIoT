@@ -112,6 +112,15 @@ public class AlarmActivity extends AppCompatActivity {
                 // gif
                 break;
             }
+            case 3: {
+                mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.saxaudio);
+                Glide.with(getApplicationContext())
+                        .load(R.drawable.saxgut)
+                        .fitCenter()
+                        .into(alarmImage);
+                // gif
+                break;
+            }
 
         }
         mediaPlayer.setLooping(true);
