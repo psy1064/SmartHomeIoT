@@ -55,6 +55,10 @@ SmartHomeIoT_AVR & SmartHomeIoT_Application
    
 <img src="./screenshot/Alarm1.jpg" width="300">   <img src="./screenshot/Alarm2.jpg" width="300">
 - [WeatherActivity.java](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/java/my/final_project/WeatherActivity.java) , [activity_weather.xml](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/res/layout/activity_weather.xml)
+   - MainActivity에서 미세먼지 데이터 클릭 시 실행되는 액티비티
+   - MainActivity에서 미세먼지 데이터를 가져온 값에 따라 다르게 화면이 출력
+   
+<img src="./screenshot/Weather1.jpg" width="300">   <img src="./screenshot/Weather2.jpg" width="300">
 - [AlarmReceiver.java](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/java/my/final_project/AlarmReceiver.java)
 - [AlarmService.java](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/java/my/final_project/AlarmService.java)
 - [BluetoothService.java](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/java/my/final_project/BluetoothService.java)
