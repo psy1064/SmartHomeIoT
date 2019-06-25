@@ -38,7 +38,22 @@ SmartHomeIoT_AVR & SmartHomeIoT_Application
    
 <img src="./screenshot/Initial1.jpg" width="300">    <img src="./screenshot/Initial2.jpg" width="300">
 - [MainActivity.java](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/java/my/final_project/MainActivity.java) , [activity_main.xml](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/res/layout/activity_main.xml)
+   - Atmega128로부터 받아온 센서(온.습도, 미세먼지)데이터 출력
+   - 미세먼지 데이터는 수치 기준(좋음, 보통, 나쁨, 매우나쁨)에 따라 글자색이 다르게 출력
+   - 사진 배경은 시간대에 따라 사진이 변경됨
+   - 전등 제어 On, Off 버튼 클릭시 Atmega128에 "On", "Off" 명령 전송
+   - 알람 설정 체크 박스 활성화 시 알람 시간 설정 버튼이 생성되고 버튼 클릭 시 TimePickerDialog에 나온 시간을 선택 후 확인을 누르면 설정한 시간이 알람 시간으로 설정 됨
+   - 알람 설정 시 Notification 생성
+   - 우측 하단 FloatingActionButton 클릭 시 TimePickermode와 Alarmmode를 선택할 수 있는 AlertDialog 생성
+   
+<img src="./screenshot/Main1.jpg" width="300">   <img src="./screenshot/Main2.jpg" width="300">   <img src="./screenshot/Main3.jpg" width="300">   <img src="./screenshot/Main4.jpg" width="300">
 - [AlarmActivity.java](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/java/my/final_project/AlarmActivity.java) , [activity_alarm.xml](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/res/layout/activity_alarm.xml)
+   - 알람 시간이 되었을 때 실행되는 액티비티
+   - 액티비티 상단 실시간 시간 출력
+   - 설정한 알람 모드에 따라 음악과 사진 혹은 GIF가 다르게 출력
+   - 하단 알람 종료 버튼 클릭 시 액티비티 종료
+   
+<img src="./screenshot/Alarm1.jpg" width="300">   <img src="./screenshot/Alarm2.jpg" width="300">
 - [WeatherActivity.java](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/java/my/final_project/WeatherActivity.java) , [activity_weather.xml](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/res/layout/activity_weather.xml)
 - [AlarmReceiver.java](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/java/my/final_project/AlarmReceiver.java)
 - [AlarmService.java](https://github.com/psy1064/SmartHomeIoT/blob/master/SmartHomeIoT_Application/app/src/main/java/my/final_project/AlarmService.java)
